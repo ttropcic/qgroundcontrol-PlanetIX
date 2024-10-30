@@ -58,7 +58,7 @@ ColumnLayout {
                     headingFontSize: ScreenTools.defaultFontPointSize * incrementFontIndex
 
                     property var batteryValuesAvailable: batteryValuesAvailableLoader.item
-                    property real incrementFontIndex:    1.15
+                    property real incrementFontIndex:    1.1
                     Loader {
                         id:                 batteryValuesAvailableLoader
                         sourceComponent:    batteryValuesAvailableComponent
@@ -187,7 +187,7 @@ ColumnLayout {
             SettingsGroupLayout {
                 id: flightSettingsGroup
 
-                property real incrementFontIndex: 1.15
+                property real incrementFontIndex: 1.1
 
                 heading:         qsTr("Flight Information")
                 contentSpacing:  0
@@ -206,7 +206,7 @@ ColumnLayout {
                 }
 
                 LabelledLabel {
-                    label:      qsTr("Vehicle Air Speed")
+                    label:      qsTr("Air Speed")
                     labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.airSpeedAvailable
                                 ? _activeVehicle.vehicle.airSpeed.value.toFixed(1) + " " + _activeVehicle.vehicle.airSpeed.units
                                 : "N/A"
@@ -224,7 +224,7 @@ ColumnLayout {
                 }
 
                 LabelledLabel {
-                    label:      qsTr("Vehicle Ground Speed")
+                    label:      qsTr("Ground Speed")
                     labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.groundSpeedAvailable
                                 ? _activeVehicle.vehicle.groundSpeed.value.toFixed(1) + " " + _activeVehicle.vehicle.groundSpeed.units
                                 : "N/A"
@@ -236,7 +236,7 @@ ColumnLayout {
                 }
 
                 LabelledLabel {
-                    label:      qsTr("Vehicle Distance to Home")
+                    label:      qsTr("Distance to Home")
                     labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.distanceToHomeAvailable
                                 ? _activeVehicle.vehicle.distanceToHome.value.toFixed(1) + " " + _activeVehicle.vehicle.distanceToHome.units
                                 : "N/A"
@@ -248,7 +248,7 @@ ColumnLayout {
                 }
 
                 LabelledLabel {
-                    label:      qsTr("Vehicle Relative Altitude")
+                    label:      qsTr("Relative Altitude")
                     labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.altitudeRelativeAvailable
                                 ? _activeVehicle.vehicle.altitudeRelative.value.toFixed(1) + " " + _activeVehicle.vehicle.altitudeRelative.units
                                 : "N/A"
@@ -261,7 +261,7 @@ ColumnLayout {
                 }
 
                 LabelledLabel {
-                    label:      qsTr("Vehicle Altitude Above Terrain")
+                    label:      qsTr("Altitude Above Terrain")
                     labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.altitudeAboveTerrAvailable
                                 ? _activeVehicle.vehicle.altitudeAboveTerr.value.toFixed(1) + " " + _activeVehicle.vehicle.altitudeAboveTerr.units
                                 : "N/A"
@@ -274,7 +274,7 @@ ColumnLayout {
                 }
 
                 LabelledLabel {
-                    label:      qsTr("Vehicle Altitude AMSL")
+                    label:      qsTr("Altitude AMSL")
                     labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.altitudeAMSLAvailable
                                 ? _activeVehicle.vehicle.altitudeAMSL.value.toFixed(1) + " " + _activeVehicle.vehicle.altitudeAMSL.units
                                 : "N/A"
@@ -287,7 +287,7 @@ ColumnLayout {
                 }
 
                 LabelledLabel {
-                    label:      qsTr("Vehicle Throttle")
+                    label:      qsTr("Throttle")
                     labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.throttlePctAvailable
                                 ? _activeVehicle.vehicle.throttlePct.value.toFixed(1) + " " + _activeVehicle.vehicle.throttlePct.units
                                 : "N/A"
@@ -299,7 +299,7 @@ ColumnLayout {
                 }
 
                 LabelledLabel {
-                    label:      qsTr("Vehicle Flight Time")
+                    label:      qsTr("Flight Time")
                     labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.flightTimeAvailable
                                 ? _activeVehicle.vehicle.flightTime.valueString
                                 : "N/A"
@@ -312,7 +312,7 @@ ColumnLayout {
                 }
 
                 LabelledLabel {
-                    label:      qsTr("Vehicle Flight Mode")
+                    label:      qsTr("Flight Mode")
                     labelText:  _activeVehicle ? _activeVehicle.flightMode : "N/A"
                     visible:    _activeVehicle
                     fontSize:   ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
