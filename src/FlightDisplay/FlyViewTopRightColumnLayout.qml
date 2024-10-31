@@ -58,7 +58,9 @@ ColumnLayout {
                     headingFontSize: ScreenTools.defaultFontPointSize * incrementFontIndex
 
                     property var batteryValuesAvailable: batteryValuesAvailableLoader.item
-                    property real incrementFontIndex:    1.1
+                    // TODO [lpavic]: Flight Information heading acts weird when Font is
+                    // changed according to main window size
+                    property real incrementFontIndex: 1.1 //0.0011 * mainWindow.height
                     Loader {
                         id:                 batteryValuesAvailableLoader
                         sourceComponent:    batteryValuesAvailableComponent
@@ -187,7 +189,9 @@ ColumnLayout {
             SettingsGroupLayout {
                 id: flightSettingsGroup
 
-                property real incrementFontIndex: 1.1
+                // TODO [lpavic]: Flight Information heading acts weird when Font is
+                // changed according to main window size
+                property real incrementFontIndex: 1.1 // 0.0011 * mainWindow.height
 
                 heading:         qsTr("Flight Information")
                 contentSpacing:  0
@@ -334,7 +338,7 @@ ColumnLayout {
                 }
 
                 LabelledLabel {
-                    label:      qsTr("GPS Satelite Number")
+                    label:      qsTr("GPS Satellite Number")
                     labelText:  _activeVehicle && _activeVehicle.gps && flightSettingsGroup.flightValuesAvailable.gpsSateliteNumberAvailable
                                 ? _activeVehicle.gps.count.value
                                 : "N/A"

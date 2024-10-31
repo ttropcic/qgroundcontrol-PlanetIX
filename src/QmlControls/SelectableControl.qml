@@ -57,7 +57,9 @@ Control {
 
     contentItem: Item {
         implicitWidth:  loader.item.width
-        implicitHeight: loader.item.height
+        // TODO [lpavic]: for now, this is okay to multiply with 2.5 because
+        // compass picture gets out of main window - make this 2.5 as property var
+        implicitHeight: loader.item.height * 2.5
 
         Loader {
             id:     loader
