@@ -205,13 +205,13 @@ Item {
     Loader {
         id: virtualTerminateButtonLoader
         anchors {
-            left: parent.left
-            top: parent.top
-            leftMargin: parent.width * 0.025
-            topMargin: parent.height * 0.6
+            left:       toolStrip.left
+            top:        toolStrip.bottom
+            leftMargin: toolStrip.leftMargin
+            topMargin:  _toolsMargin
         }
-        width: parent.width * 0.125
-        height: parent.height * 0.125
+        width:  parent.width * 0.075
+        height: parent.height * 0.15
 
         source:                     "qrc:/qml/VirtualTerminateButton.qml"
         active:                     _activeVehicle
