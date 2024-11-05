@@ -241,6 +241,7 @@
         <file alias="QGroundControl/FlightDisplay/GuidedActionLand.qml">src/FlightDisplay/GuidedActionLand.qml</file>
         <file alias="QGroundControl/FlightDisplay/GuidedActionList.qml">src/FlightDisplay/GuidedActionList.qml</file>
         <file alias="QGroundControl/FlightDisplay/GuidedActionTakeoff.qml">src/FlightDisplay/GuidedActionTakeoff.qml</file>
+        <file alias="QGroundControl/FlightDisplay/GuidedActionTerminate.qml">src/FlightDisplay/GuidedActionTerminate.qml</file>
         <file alias="QGroundControl/FlightDisplay/GuidedActionGripper.qml">src/FlightDisplay/GuidedActionGripper.qml</file>
         <file alias="QGroundControl/FlightDisplay/GripperMenu.qml">src/FlightDisplay/GripperMenu.qml</file>
         <file alias="QGroundControl/FlightDisplay/GuidedActionPause.qml">src/FlightDisplay/GuidedActionPause.qml</file>
@@ -307,7 +308,6 @@
         <file alias="VibrationPage.qml">src/AnalyzeView/VibrationPage.qml</file>
         <file alias="VideoSettings.qml">src/UI/preferences/VideoSettings.qml</file>
         <file alias="VirtualJoystick.qml">src/FlightDisplay/VirtualJoystick.qml</file>
-        <file alias="VirtualTerminateButton.qml">src/FlightDisplay/VirtualTerminateButton.qml</file>
         <file alias="VTOLLandingPatternEditor.qml">src/PlanView/VTOLLandingPatternEditor.qml</file>
         <file alias="QGroundControl/FlightDisplay/FlyViewInsetViewer.qml">src/FlightDisplay/FlyViewInsetViewer.qml</file>
         <file alias="Viewer3D/Viewer3D.qml">src/Viewer3D/Viewer3DQml/Viewer3D.qml</file>

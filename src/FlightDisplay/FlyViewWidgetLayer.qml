@@ -166,6 +166,7 @@ Item {
         maxHeight:              parent.height - y - parentToolInsets.bottomEdgeLeftInset - _toolsMargin
         visible:                !QGroundControl.videoManager.fullScreen
 
+        width: parent.width * 0.05
         onDisplayPreFlightChecklist: preFlightChecklistPopup.createObject(mainWindow).open()
 
 
@@ -222,4 +223,122 @@ Item {
             }
         }
     }
+    // Message Console
+    QGCFlickable {
+        id:     scrollableMessageArea
+        width:  parent.width / 3
+        height: parent.height / 10
+        anchors {
+            bottom:           parent.bottom
+            bottomMargin:     parent.height * 0.01
+            horizontalCenter: parent.horizontalCenter
+        }
+        visible: true
+
+        property var qgcPal:         QGroundControl.globalPalette
+
+        contentWidth:  backgroundOfMessageText.width
+        contentHeight: backgroundOfMessageText.height
+        clip:          true
+
+        TextArea.flickable: TextArea {
+            id:                     messageText
+            width:                  parent.width
+            height:                 parent.height
+            readOnly:               true
+            textFormat:             TextEdit.RichText
+            color:                  qgcPal.text
+            placeholderText:        qsTr("No Messages")
+            placeholderTextColor:   qgcPal.text
+            padding:                0
+            background:             Rectangle {
+                                        id: backgroundOfMessageText
+                                        width:  scrollableMessageArea.width
+                                        height: scrollableMessageArea.height
+                                        color:  qgcPal.window
+                                    }
+            visible:                true
+            focus:                  true
+
+            property bool _noMessages: messageText.length === 0
+            property var  _fact:       null
+
+            function formatMessage(message) {
+                message = message.replace(new RegExp("<#E>", "g"), "color: " + qgcPal.warningText + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
+                message = message.replace(new RegExp("<#I>", "g"), "color: " + qgcPal.warningText + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
+                message = message.replace(new RegExp("<#N>", "g"), "color: " + qgcPal.text + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
+                return message;
+            }
+
+            Component.onCompleted: {
+                if (_activeVehicle && _activeVehicle.formattedMessages) {
+                    messageText.text = messageText.formatMessage(_activeVehicle.formattedMessages)
+                    _activeVehicle.resetAllMessages()
+                }
+            }
+
+            Connections {
+                target:                 _activeVehicle
+                onNewFormattedMessage: (formattedMessage) => { messageText.insert(messageText.length, messageText.formatMessage(formattedMessage)) }
+            }
+
+            FactPanelController {
+                id: controller
+            }
+
+            onLinkActivated: (link) => {
+                if (link.startsWith('param://')) {
+                    var paramName = link.substr(8);
+                    _fact = controller.getParameterFact(-1, paramName, true)
+                    if (_fact != null) {
+                        paramEditorDialogComponent.createObject(mainWindow).open()
+                    }
+                } else {
+                    Qt.openUrlExternally(link);
+                }
+            }
+
+            Component {
+                id: paramEditorDialogComponent
+
+                ParameterEditorDialog {
+                    title:          qsTr("Edit Parameter")
+                    fact:           messageText._fact
+                    destroyOnClose: true
+                }
+            }
+
+            Rectangle {
+                anchors.right: parent.right
+                anchors.top:   parent.top
+                width:         ScreenTools.defaultFontPixelHeight * 1.25
+                height:        width
+                radius:        width / 2
+                color:         QGroundControl.globalPalette.button
+                border.color:  QGroundControl.globalPalette.buttonText
+                visible:       !messageText._noMessages
+
+                QGCColoredImage {
+                    anchors.margins:   ScreenTools.defaultFontPixelHeight * 0.25
+                    anchors.centerIn:  parent
+                    anchors.fill:      parent
+                    sourceSize.height: height
+                    source:            "/res/TrashDelete.svg"
+                    fillMode:          Image.PreserveAspectFit
+                    mipmap:            true
+                    smooth:            true
+                    color:             qgcPal.text
+                }
+
+                QGCMouseArea {
+                    fillItem: parent
+                    onClicked: {
+                        _activeVehicle.clearMessages()
+                        messageText.text = ""
+                    }
+                }
+            }
+        }
+    }
+
 }
