@@ -479,8 +479,10 @@ public:
     QString flightMode                      () const;
     void setFlightMode                      (const QString& flightMode);
 
+    Q_PROPERTY(bool terminated READ terminated NOTIFY terminatedChanged);
+
     Q_INVOKABLE bool terminated              () const{ return _terminated; }
-    Q_INVOKABLE void setTerminated();
+    Q_INVOKABLE void setTerminated           ();
 
     bool airship() const;
 

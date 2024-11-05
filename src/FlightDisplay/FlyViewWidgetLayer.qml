@@ -126,6 +126,7 @@ Item {
         maxHeight:              parent.height - y - parentToolInsets.bottomEdgeLeftInset - _toolsMargin
         visible:                !QGroundControl.videoManager.fullScreen
 
+        width: parent.width * 0.05
         onDisplayPreFlightChecklist: preFlightChecklistPopup.createObject(mainWindow).open()
 
 
@@ -158,28 +159,6 @@ Item {
     Component {
         id: preFlightChecklistPopup
         FlyViewPreFlightChecklistPopup {
-        }
-    }
-
-    //-- Virtual Terminate Button
-    Loader {
-        id: virtualTerminateButtonLoader
-        anchors {
-            left:       toolStrip.left
-            top:        toolStrip.bottom
-            leftMargin: toolStrip.leftMargin
-            topMargin:  _toolsMargin
-        }
-        width:  parent.width * 0.075
-        height: parent.height * 0.15
-
-        source:                     "qrc:/qml/VirtualTerminateButton.qml"
-        active:                     _activeVehicle
-
-        onLoaded: {
-            if (virtualTerminateButtonLoader.item) {
-                virtualTerminateButtonLoader.item.terminateRequest.connect(mainWindow.terminateRequest)
-            }
         }
     }
 
