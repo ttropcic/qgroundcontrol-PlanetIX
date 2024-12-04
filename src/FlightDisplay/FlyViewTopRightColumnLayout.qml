@@ -17,58 +17,414 @@ import QGroundControl.FlightMap
 import QGroundControl.Palette
 import QGroundControl.ScreenTools
 
+import MAVLink
+
 ColumnLayout {
     width: _rightPanelWidth
+    
 
-    RowLayout {
-        id:                 multiVehiclePanelSelector
+    // Battery Info
+    Item {
+        id: batteryContentComponent
         Layout.alignment:   Qt.AlignTop
-        spacing:            ScreenTools.defaultFontPixelWidth
-        visible:            QGroundControl.multiVehicleManager.vehicles.count > 1 && QGroundControl.corePlugin.options.flyView.showMultiVehicleList
 
-        QGCMapPalette { id: mapPal; lightColors: true }
+        visible: _activeVehicle && _activeVehicle.batteries && _activeVehicle.batteries.count !== 0
 
-        QGCRadioButton {
-            id:             singleVehicleRadio
-            text:           qsTr("Single")
-            checked:        _showSingleVehicleUI
-            onClicked:      _showSingleVehicleUI = true
-            textColor:      mapPal.text
-        }
+        ColumnLayout {
+            id: batteryContentComponentColumnLayout
 
-        QGCRadioButton {
-            text:           qsTr("Multi-Vehicle")
-            textColor:      mapPal.text
-            onClicked:      _showSingleVehicleUI = false
-        }
-    }
+            spacing: ScreenTools.defaultFontPixelHeight / 2
 
-    TerrainProgress {
-        Layout.alignment:       Qt.AlignTop
-        Layout.preferredWidth:  _rightPanelWidth
-    }
+            Component {
+                id: batteryValuesAvailableComponent
 
-    // We use a Loader to load the photoVideoControlComponent only when the active vehicle is not null
-    // This make it easier to implement PhotoVideoControl without having to check for the mavlink camera
-    // to be null all over the place
-    Loader {
-        id:                 photoVideoControlLoader
-        Layout.alignment:   Qt.AlignTop | Qt.AlignRight
-        sourceComponent:    globals.activeVehicle && _showSingleVehicleUI ? photoVideoControlComponent : undefined
+                QtObject {
+                    property bool currentAvailable:          !isNaN(battery.current.rawValue)
+                    property bool mahConsumedAvailable:      !isNaN(battery.mahConsumed.rawValue)
+                    property bool timeRemainingAvailable:    !isNaN(battery.timeRemaining.rawValue)
+                    property bool percentRemainingAvailable: !isNaN(battery.percentRemaining.rawValue)
+                    property bool chargeStateAvailable:      battery.chargeState.rawValue !== MAVLink.MAV_BATTERY_CHARGE_STATE_UNDEFINED
+                }
+            }
 
-        property real rightEdgeCenterInset: visible ? parent.width - x : 0
+            Repeater {
+                model: _activeVehicle ? _activeVehicle.batteries : 0
 
-        Component {
-            id: photoVideoControlComponent
+                SettingsGroupLayout {
+                    heading:         qsTr("Battery %1").arg(_activeVehicle.batteries.length === 1 ? qsTr("Status") : object.id.rawValue)
+                    contentSpacing:  0
+                    showDividers:    false
+                    layoutColor:     qgcPal.window
+                    headingFontSize: ScreenTools.defaultFontPointSize * incrementFontIndex
 
-            PhotoVideoControl {
+                    property var batteryValuesAvailable: batteryValuesAvailableLoader.item
+                    // TODO [lpavic]: Flight Information heading acts weird when Font is
+                    // changed according to main window size
+                    property real incrementFontIndex: 1.12 //0.0011 * mainWindow.height
+                    Loader {
+                        id:                 batteryValuesAvailableLoader
+                        sourceComponent:    batteryValuesAvailableComponent
+
+                        property var battery: object
+                    }
+
+                    LabelledLabel {
+                        label:              qsTr("Charge State")
+                        labelText:          _activeVehicle && batteryValuesAvailable.chargeStateAvailable
+                                            ? object.chargeState.enumStringValue
+                                            : "N/A"
+                        visible:            _activeVehicle
+                        fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
+                        labelColor:         _activeVehicle && batteryValuesAvailable.chargeStateAvailable
+                                            ? qgcPal.text
+                                            : "red"
+                        fontBoldLabelLabel: true
+                        fontBoldLabel:      true
+                    }
+
+                    LabelledLabel {
+                        label:              qsTr("Remaining")
+                        labelText:          _activeVehicle && batteryValuesAvailable.timeRemainingAvailable
+                                            ? object.timeRemainingStr.value
+                                            : "N/A"
+                        visible:            _activeVehicle
+                        fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
+                        labelColor:         _activeVehicle && batteryValuesAvailable.timeRemainingAvailable
+                                            ? qgcPal.text
+                                            : "red"
+                        fontBoldLabelLabel: true
+                        fontBoldLabel:      true
+                    }
+
+                    LabelledLabel {
+                        label:              qsTr("Remaining")
+                        labelText:          _activeVehicle && batteryValuesAvailable.percentRemainingAvailable
+                                            ? object.percentRemaining.valueString + " " + object.percentRemaining.units
+                                            : "N/A"
+                        visible:            _activeVehicle
+                        fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
+                        labelColor:         _activeVehicle && batteryValuesAvailable.percentRemainingAvailable
+                                            ? qgcPal.text
+                                            : "red"
+                        fontBoldLabelLabel: true
+                        fontBoldLabel:      true
+                    }
+
+                    LabelledLabel {
+                        label:              qsTr("Voltage")
+                        labelText:          _activeVehicle
+                                            ? object.voltage.value.toFixed(1) + " " + object.voltage.units
+                                            : "N/A"
+                        visible:            _activeVehicle
+                        fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
+                        labelColor:         _activeVehicle
+                                            ? (object.voltage.value < 46)
+                                                ? "red"
+                                                : ((object.voltage.value < 47)
+                                                ? "#FF8C00" // Dark orange
+                                                : "green")
+                                            : "red"
+                        fontBoldLabelLabel: true
+                        fontBoldLabel:      true
+                    }
+
+                    LabelledLabel {
+                        label:              qsTr("Current")
+                        labelText:          _activeVehicle && batteryValuesAvailable.currentAvailable
+                                            ? object.current.value.toFixed(1) + " " + object.current.units
+                                            : "N/A"
+                        visible:            _activeVehicle
+                        fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
+                        labelColor:         _activeVehicle && batteryValuesAvailable.currentAvailable
+                                            ? qgcPal.text
+                                            : "red"
+                        fontBoldLabelLabel: true
+                        fontBoldLabel:      true
+                    }
+
+                    LabelledLabel {
+                        label:      qsTr("Consumed")
+                        // object.mahConsumed.units is in mAh, and Ah unit is desirable, so divide by 1000
+                        labelText:          _activeVehicle && batteryValuesAvailable.mahConsumedAvailable
+                                            ? (object.mahConsumed.value / 1000).toFixed(1) + " " + "Ah"
+                                            : "N/A"
+                        visible:            _activeVehicle
+                        fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
+                        labelColor:         _activeVehicle && batteryValuesAvailable.mahConsumedAvailable
+                                            ? ((object.mahConsumed.value / 1000) < 15)
+                                                ? "green"
+                                                : (((object.mahConsumed.value / 1000) < 18)
+                                                ? "#FF8C00" // Dark orange
+                                                : "red")
+                                            : "red"
+                        fontBoldLabelLabel: true
+                        fontBoldLabel:      true
+                    }
+                }
             }
         }
     }
 
-    MultiVehicleList {
-        Layout.preferredWidth:  _rightPanelWidth
-        Layout.fillHeight:      true
-        visible:                !_showSingleVehicleUI
+    // Flight Info
+    Item {
+        id:               flightContentComponent
+        Layout.alignment: Qt.AlignTop
+
+        // activeVehicle.vehicle is fact of the vehicle that contains some data of the vehicle, like airSpeed
+        visible: _activeVehicle && _activeVehicle.vehicle !== undefined
+
+        ColumnLayout {
+            id:      flightContentComponentColumnLayout
+            spacing: ScreenTools.defaultFontPixelHeight / 2
+
+            Component {
+                id: flightValuesAvailableComponent
+
+                QtObject {
+                    property bool airSpeedAvailable:          _activeVehicle && _activeVehicle.vehicle ? !isNaN(_activeVehicle.vehicle.airSpeed.rawValue) : false
+                    property bool groundSpeedAvailable:       _activeVehicle && _activeVehicle.vehicle ? !isNaN(_activeVehicle.vehicle.groundSpeed.rawValue) : false
+                    property bool distanceToHomeAvailable:    _activeVehicle && _activeVehicle.vehicle ? !isNaN(_activeVehicle.vehicle.distanceToHome.rawValue) : false
+                    property bool altitudeRelativeAvailable:  _activeVehicle && _activeVehicle.vehicle ? !isNaN(_activeVehicle.vehicle.altitudeRelative.rawValue) : false
+                    property bool altitudeAboveTerrAvailable: _activeVehicle && _activeVehicle.vehicle ? !isNaN(_activeVehicle.vehicle.altitudeAboveTerr.rawValue) : false
+                    property bool altitudeAMSLAvailable:      _activeVehicle && _activeVehicle.vehicle ? !isNaN(_activeVehicle.vehicle.altitudeAMSL.rawValue) : false
+                    property bool throttlePctAvailable:       _activeVehicle && _activeVehicle.vehicle ? !isNaN(_activeVehicle.vehicle.throttlePct.rawValue) : false
+                    property bool flightTimeAvailable:        _activeVehicle && _activeVehicle.vehicle ? !isNaN(_activeVehicle.vehicle.flightTime.rawValue) : false
+
+                    property bool gpsSateliteNumberAvailable: _activeVehicle && _activeVehicle.gps ? !isNaN(_activeVehicle.gps.count.rawValue) : false
+                    property bool gpsFixAvailable:            _activeVehicle && _activeVehicle.gps ? !isNaN(_activeVehicle.gps.lock.rawValue) : false
+
+                    property bool windDirectionAvailable: _activeVehicle && _activeVehicle.wind ? !isNaN(_activeVehicle.wind.direction.rawValue) : false
+                    property bool windSpeedAvailable:     _activeVehicle && _activeVehicle.wind ? !isNaN(_activeVehicle.wind.speed.rawValue) : false
+                }
+            }
+
+            SettingsGroupLayout {
+                id: flightSettingsGroup
+
+                // TODO [lpavic]: Flight Information heading acts weird when Font is
+                // changed according to main window size
+                property real incrementFontIndex: 1.12 // 0.0011 * mainWindow.height
+
+                heading:         qsTr("Flight Information")
+                contentSpacing:  0
+                showDividers:    false
+                layoutColor:     qgcPal.window
+                headingFontSize: ScreenTools.defaultFontPointSize * incrementFontIndex
+
+                property var flightValuesAvailable
+
+                Loader {
+                    id:              flightValuesAvailableLoader
+                    sourceComponent: flightValuesAvailableComponent
+                    onLoaded: {
+                        flightSettingsGroup.flightValuesAvailable = flightValuesAvailableLoader.item
+                    }
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Air Speed")
+                    labelText:          _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.airSpeedAvailable
+                                        ? _activeVehicle.vehicle.airSpeed.value.toFixed(1) + " " + _activeVehicle.vehicle.airSpeed.units
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.airSpeedAvailable
+                                        ? (_activeVehicle.vehicle.airSpeed.value > 25 || _activeVehicle.vehicle.airSpeed.value <= 18)
+                                            ? "red"
+                                            : (_activeVehicle.vehicle.airSpeed.value > 23 || _activeVehicle.vehicle.airSpeed.value <= 21)
+                                            ? "#FF8C00" // Dark orange 
+                                            : (_activeVehicle.vehicle.airSpeed.value > 21 && _activeVehicle.vehicle.airSpeed.value <= 23)
+                                            ? "green"
+                                            : "red"
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Ground Speed")
+                    labelText:          _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.groundSpeedAvailable
+                                        ? _activeVehicle.vehicle.groundSpeed.value.toFixed(1) + " " + _activeVehicle.vehicle.groundSpeed.units
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.groundSpeedAvailable
+                                        ? qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Distance to Home")
+                    labelText:          _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.distanceToHomeAvailable
+                                        ? _activeVehicle.vehicle.distanceToHome.value.toFixed(1) + " " + _activeVehicle.vehicle.distanceToHome.units
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.distanceToHomeAvailable
+                                        ? qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Relative Altitude")
+                    labelText:          _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.altitudeRelativeAvailable
+                                        ? _activeVehicle.vehicle.altitudeRelative.value.toFixed(1) + " " + _activeVehicle.vehicle.altitudeRelative.units
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.altitudeRelativeAvailable
+                                        ? (_activeVehicle.vehicle.altitudeRelative.value < 50)
+                                            ? "red" : "green"
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Altitude Above Terrain")
+                    labelText:          _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.altitudeAboveTerrAvailable
+                                        ? _activeVehicle.vehicle.altitudeAboveTerr.value.toFixed(1) + " " + _activeVehicle.vehicle.altitudeAboveTerr.units
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.altitudeAboveTerrAvailable
+                                        ? (_activeVehicle.vehicle.altitudeRelative.value < 50)
+                                            ? "red" : "green"
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Altitude AMSL")
+                    labelText:          _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.altitudeAMSLAvailable
+                                        ? _activeVehicle.vehicle.altitudeAMSL.value.toFixed(1) + " " + _activeVehicle.vehicle.altitudeAMSL.units
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.altitudeAMSLAvailable
+                                        ? (_activeVehicle.vehicle.altitudeRelative.value < 50)
+                                            ? "red" : "green"
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Throttle")
+                    labelText:          _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.throttlePctAvailable
+                                        ? _activeVehicle.vehicle.throttlePct.value.toFixed(1) + " " + _activeVehicle.vehicle.throttlePct.units
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.throttlePctAvailable
+                                        ? qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Flight Time")
+                    labelText:          _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.flightTimeAvailable
+                                        ? _activeVehicle.vehicle.flightTime.valueString
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettingsGroup.flightValuesAvailable.flightTimeAvailable
+                                        ? (_activeVehicle.vehicle.flightTime.rawValue > (4800)) // 4800 s = 80 min
+                                            ? "red" : qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Flight Mode")
+                    labelText:          _activeVehicle ? _activeVehicle.flightMode : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle
+                                        ? qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Photos taken")
+                    labelText:          _activeVehicle
+                                        ? _activeVehicle.cameraTriggerPoints.count
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle
+                                        ? qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("GPS Satellite Number")
+                    labelText:          _activeVehicle && _activeVehicle.gps && flightSettingsGroup.flightValuesAvailable.gpsSateliteNumberAvailable
+                                        ? _activeVehicle.gps.count.value
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.gps && flightSettingsGroup.flightValuesAvailable.gpsSateliteNumberAvailable
+                                        ? qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("GPS Fix")
+                    labelText:          _activeVehicle && _activeVehicle.gps && flightSettingsGroup.flightValuesAvailable.gpsFixAvailable
+                                        ? _activeVehicle.gps.lock.enumStringValue
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.gps && flightSettingsGroup.flightValuesAvailable.gpsFixAvailable
+                                        ? qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Wind Direction")
+                    labelText:          _activeVehicle && _activeVehicle.wind && flightSettingsGroup.flightValuesAvailable.windDirectionAvailable
+                                        ? _activeVehicle.wind.direction.value.toFixed(1) + " " + _activeVehicle.wind.direction.units
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.wind && flightSettingsGroup.flightValuesAvailable.windDirectionAvailable
+                                        ? qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Wind Speed")
+                    labelText:          _activeVehicle && _activeVehicle.wind && flightSettingsGroup.flightValuesAvailable.windSpeedAvailable
+                                        ? _activeVehicle.wind.speed.value.toFixed(1) + " " + _activeVehicle.wind.speed.units
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    fontSize:           ScreenTools.defaultFontPointSize * flightSettingsGroup.incrementFontIndex
+                    labelColor:         _activeVehicle && _activeVehicle.wind && flightSettingsGroup.flightValuesAvailable.windSpeedAvailable
+                                        ? qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                }
+            }
+        }
     }
 }

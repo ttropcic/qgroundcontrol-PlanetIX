@@ -46,7 +46,7 @@ Item {
     property real   _margins:               ScreenTools.defaultFontPixelWidth / 2
     property real   _toolsMargin:           ScreenTools.defaultFontPixelWidth * 0.75
     property rect   _centerViewport:        Qt.rect(0, 0, width, height)
-    property real   _rightPanelWidth:       ScreenTools.defaultFontPixelWidth * 30
+    property real   _rightPanelWidth:       ScreenTools.defaultFontPixelWidth * 45
     property alias  _gripperMenu:           gripperOptions
     property real   _layoutMargin:          ScreenTools.defaultFontPixelWidth * 0.75
     property bool   _layoutSpacing:         ScreenTools.defaultFontPixelWidth
@@ -58,16 +58,16 @@ Item {
         id:                     _totalToolInsets
         leftEdgeTopInset:       toolStrip.leftEdgeTopInset
         leftEdgeCenterInset:    toolStrip.leftEdgeCenterInset
-        leftEdgeBottomInset:    virtualJoystickMultiTouch.visible ? virtualJoystickMultiTouch.leftEdgeBottomInset : parentToolInsets.leftEdgeBottomInset
+        leftEdgeBottomInset:    parentToolInsets.leftEdgeBottomInset
         rightEdgeTopInset:      topRightColumnLayout.rightEdgeTopInset
         rightEdgeCenterInset:   topRightColumnLayout.rightEdgeCenterInset
         rightEdgeBottomInset:   bottomRightRowLayout.rightEdgeBottomInset
         topEdgeLeftInset:       toolStrip.topEdgeLeftInset
         topEdgeCenterInset:     mapScale.topEdgeCenterInset
         topEdgeRightInset:      topRightColumnLayout.topEdgeRightInset
-        bottomEdgeLeftInset:    virtualJoystickMultiTouch.visible ? virtualJoystickMultiTouch.bottomEdgeLeftInset : parentToolInsets.bottomEdgeLeftInset
+        bottomEdgeLeftInset:    parentToolInsets.bottomEdgeLeftInset
         bottomEdgeCenterInset:  bottomRightRowLayout.bottomEdgeCenterInset
-        bottomEdgeRightInset:   virtualJoystickMultiTouch.visible ? virtualJoystickMultiTouch.bottomEdgeRightInset : bottomRightRowLayout.bottomEdgeRightInset
+        bottomEdgeRightInset:   bottomRightRowLayout.bottomEdgeRightInset
     }
 
     FlyViewTopRightColumnLayout {
@@ -77,6 +77,7 @@ Item {
         anchors.bottom:     bottomRightRowLayout.top
         anchors.right:      parent.right
         spacing:            _layoutSpacing
+        height: mainWindow.height * 0.75
 
         property real topEdgeRightInset:    childrenRect.height + _layoutMargin
         property real rightEdgeTopInset:    width + _layoutMargin
@@ -111,50 +112,9 @@ Item {
         utmspSliderTrigger:         utmspActTrigger
     }
 
-    //-- Virtual Joystick
-    Loader {
-        id:                         virtualJoystickMultiTouch
-        z:                          QGroundControl.zOrderTopMost + 1
-        anchors.right:              parent.right
-        anchors.rightMargin:        anchors.leftMargin
-        height:                     Math.min(parent.height * 0.25, ScreenTools.defaultFontPixelWidth * 16)
-        visible:                    _virtualJoystickEnabled && !QGroundControl.videoManager.fullScreen && !(_activeVehicle ? _activeVehicle.usingHighLatencyLink : false)
-        anchors.bottom:             parent.bottom
-        anchors.bottomMargin:       bottomLoaderMargin
-        anchors.left:               parent.left   
-        anchors.leftMargin:         ( y > toolStrip.y + toolStrip.height ? toolStrip.width / 2 : toolStrip.width * 1.05 + toolStrip.x) 
-        source:                     "qrc:/qml/VirtualJoystick.qml"
-        active:                     _virtualJoystickEnabled && !(_activeVehicle ? _activeVehicle.usingHighLatencyLink : false)
-
-        property real bottomEdgeLeftInset:     parent.height-y
-        property bool autoCenterThrottle:      QGroundControl.settingsManager.appSettings.virtualJoystickAutoCenterThrottle.rawValue
-        property bool _virtualJoystickEnabled: QGroundControl.settingsManager.appSettings.virtualJoystick.rawValue
-        property real bottomEdgeRightInset:    parent.height-y
-        property var  _pipViewMargin:          _pipView.visible ? parentToolInsets.bottomEdgeLeftInset + ScreenTools.defaultFontPixelHeight * 2 : 
-                                               bottomRightRowLayout.height + ScreenTools.defaultFontPixelHeight * 1.5
-
-        property var  bottomLoaderMargin:      _pipViewMargin >= parent.height / 2 ? parent.height / 2 : _pipViewMargin
-
-        // Width is difficult to access directly hence this hack which may not work in all circumstances
-        property real leftEdgeBottomInset:  visible ? bottomEdgeLeftInset + width/18 - ScreenTools.defaultFontPixelHeight*2 : 0
-        property real rightEdgeBottomInset: visible ? bottomEdgeRightInset + width/18 - ScreenTools.defaultFontPixelHeight*2 : 0
-        property real rootWidth:            _root.width
-        property var  itemX:                virtualJoystickMultiTouch.x   // real X on screen
-
-        onRootWidthChanged: virtualJoystickMultiTouch.status == Loader.Ready && visible ? virtualJoystickMultiTouch.item.uiTotalWidth = rootWidth : undefined
-        onItemXChanged:     virtualJoystickMultiTouch.status == Loader.Ready && visible ? virtualJoystickMultiTouch.item.uiRealX = itemX : undefined
-
-        //Loader status logic
-        onLoaded: {
-            if (virtualJoystickMultiTouch.visible) {
-                virtualJoystickMultiTouch.item.calibration = true 
-                virtualJoystickMultiTouch.item.uiTotalWidth = rootWidth
-                virtualJoystickMultiTouch.item.uiRealX = itemX
-            } else {
-                virtualJoystickMultiTouch.item.calibration = false
-            }
-        }
-    }
+    // TODO [lpavic]: Virtual joystick removed, but
+    // virtualJoystickAutoCenterThrottle and virtualJoystick
+    // facts in AppSettings.h are still present - need to remove them?
 
     FlyViewToolStrip {
         id:                     toolStrip
@@ -166,6 +126,7 @@ Item {
         maxHeight:              parent.height - y - parentToolInsets.bottomEdgeLeftInset - _toolsMargin
         visible:                !QGroundControl.videoManager.fullScreen
 
+        width: parent.width * 0.05
         onDisplayPreFlightChecklist: preFlightChecklistPopup.createObject(mainWindow).open()
 
 
@@ -201,25 +162,122 @@ Item {
         }
     }
 
-    //-- Virtual Terminate Button
-    Loader {
-        id: virtualTerminateButtonLoader
+    // Message Console
+    QGCFlickable {
+        id:     scrollableMessageArea
+        width:  parent.width / 3
+        height: parent.height / 10
         anchors {
-            left: parent.left
-            top: parent.top
-            leftMargin: parent.width * 0.025
-            topMargin: parent.height * 0.6
+            bottom:           parent.bottom
+            bottomMargin:     parent.height * 0.01
+            horizontalCenter: parent.horizontalCenter
         }
-        width: parent.width * 0.125
-        height: parent.height * 0.125
+        visible: true
 
-        source:                     "qrc:/qml/VirtualTerminateButton.qml"
-        active:                     _activeVehicle
+        property var qgcPal:         QGroundControl.globalPalette
 
-        onLoaded: {
-            if (virtualTerminateButtonLoader.item) {
-                virtualTerminateButtonLoader.item.terminateRequest.connect(mainWindow.terminateRequest)
+        contentWidth:  backgroundOfMessageText.width
+        contentHeight: backgroundOfMessageText.height
+        clip:          true
+
+        TextArea.flickable: TextArea {
+            id:                     messageText
+            width:                  parent.width
+            height:                 parent.height
+            readOnly:               true
+            textFormat:             TextEdit.RichText
+            color:                  qgcPal.text
+            placeholderText:        qsTr("No Messages")
+            placeholderTextColor:   qgcPal.text
+            padding:                0
+            background:             Rectangle {
+                                        id: backgroundOfMessageText
+                                        width:  scrollableMessageArea.width
+                                        height: scrollableMessageArea.height
+                                        color:  qgcPal.window
+                                    }
+            visible:                true
+            focus:                  true
+
+            property bool _noMessages: messageText.length === 0
+            property var  _fact:       null
+
+            function formatMessage(message) {
+                message = message.replace(new RegExp("<#E>", "g"), "color: " + qgcPal.warningText + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
+                message = message.replace(new RegExp("<#I>", "g"), "color: " + qgcPal.warningText + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
+                message = message.replace(new RegExp("<#N>", "g"), "color: " + qgcPal.text + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
+                return message;
+            }
+
+            Component.onCompleted: {
+                if (_activeVehicle && _activeVehicle.formattedMessages) {
+                    messageText.text = messageText.formatMessage(_activeVehicle.formattedMessages)
+                    _activeVehicle.resetAllMessages()
+                }
+            }
+
+            Connections {
+                target:                 _activeVehicle
+                onNewFormattedMessage: (formattedMessage) => { messageText.insert(messageText.length, messageText.formatMessage(formattedMessage)) }
+            }
+
+            FactPanelController {
+                id: controller
+            }
+
+            onLinkActivated: (link) => {
+                if (link.startsWith('param://')) {
+                    var paramName = link.substr(8);
+                    _fact = controller.getParameterFact(-1, paramName, true)
+                    if (_fact != null) {
+                        paramEditorDialogComponent.createObject(mainWindow).open()
+                    }
+                } else {
+                    Qt.openUrlExternally(link);
+                }
+            }
+
+            Component {
+                id: paramEditorDialogComponent
+
+                ParameterEditorDialog {
+                    title:          qsTr("Edit Parameter")
+                    fact:           messageText._fact
+                    destroyOnClose: true
+                }
+            }
+
+            Rectangle {
+                anchors.right: parent.right
+                anchors.top:   parent.top
+                width:         ScreenTools.defaultFontPixelHeight * 1.25
+                height:        width
+                radius:        width / 2
+                color:         QGroundControl.globalPalette.button
+                border.color:  QGroundControl.globalPalette.buttonText
+                visible:       !messageText._noMessages
+
+                QGCColoredImage {
+                    anchors.margins:   ScreenTools.defaultFontPixelHeight * 0.25
+                    anchors.centerIn:  parent
+                    anchors.fill:      parent
+                    sourceSize.height: height
+                    source:            "/res/TrashDelete.svg"
+                    fillMode:          Image.PreserveAspectFit
+                    mipmap:            true
+                    smooth:            true
+                    color:             qgcPal.text
+                }
+
+                QGCMouseArea {
+                    fillItem: parent
+                    onClicked: {
+                        _activeVehicle.clearMessages()
+                        messageText.text = ""
+                    }
+                }
             }
         }
     }
+
 }
