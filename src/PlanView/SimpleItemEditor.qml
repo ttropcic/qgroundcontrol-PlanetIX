@@ -16,6 +16,7 @@ Rectangle {
     color:  qgcPal.windowShadeDark
     radius: _radius
 
+    property var  _missionController:       _planMasterController.missionController
     property bool _specifiesAltitude:       missionItem.specifiesAltitude
     property real _margin:                  ScreenTools.defaultFontPixelHeight / 2
     property real _altRectMargin:           ScreenTools.defaultFontPixelWidth / 2
@@ -36,6 +37,26 @@ Rectangle {
         } else {
             altModeLabel.text = qsTr("Internal Error")
         }
+    }
+
+    function checkLandingPoint() {
+        for (let i = 0; i < _missionController.visualItems.count; i++) {
+            let item = _missionController.visualItems.get(i);
+            if (i > 1) {
+                if ((_missionController.visualItems.get(i - 1).command == 16 // MAV_CMD_NAV_WAYPOINT for regular waypoint
+                    || _missionController.visualItems.get(i - 1).command == 3000) // MAV_CMD_DO_VTOL_TRANSITION=3000 for vtol transition point
+                    && missionItem.isLandCommand
+                    && item.isLandCommand) {
+                        if (missionItem.coordinate.latitude == item.coordinate.latitude
+                            && missionItem.coordinate.longitude == item.coordinate.longitude) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                }
+            }
+        }
+        return false;
     }
 
     Component.onCompleted: updateAltitudeModeText()
@@ -198,7 +219,10 @@ Rectangle {
                     unitsLabel:         "m"
                     showUnits:          true
                     numericValuesOnly:  true
-                    onEditingFinished:  console.log("TEEEEEEEEEEEEEEEEEEST")
+                    visible:            missionItem.isLandCommand
+                    enabled:            checkLandingPoint()
+                    onEditingFinished:  console.log("missionItemCoordinate1 " + missionItem.coordinate.latitude + " missionItemCoordinate2 " + missionItem.coordinate.longitude)
+                                        // moveLastWaypointFromLandingPoint()
                 }
             }
 
