@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtPositioning 5.15
 
 import QGroundControl
 import QGroundControl.ScreenTools
@@ -43,20 +44,21 @@ Rectangle {
         for (let i = 0; i < _missionController.visualItems.count; i++) {
             let item = _missionController.visualItems.get(i);
             if (i > 1) {
-                if ((_missionController.visualItems.get(i - 1).command == 16 // MAV_CMD_NAV_WAYPOINT for regular waypoint
-                    || _missionController.visualItems.get(i - 1).command == 3000) // MAV_CMD_DO_VTOL_TRANSITION=3000 for vtol transition point
+                let previousItem = _missionController.visualItems.get(i - 1);
+                if ((previousItem.command == 16 // MAV_CMD_NAV_WAYPOINT for regular waypoint
+                    || previousItem.command == 3000) // MAV_CMD_DO_VTOL_TRANSITION=3000 for vtol transition point
                     && missionItem.isLandCommand
                     && item.isLandCommand) {
-                        if (missionItem.coordinate.latitude == item.coordinate.latitude
-                            && missionItem.coordinate.longitude == item.coordinate.longitude) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                    if (missionItem.coordinate.latitude == item.coordinate.latitude
+                        && missionItem.coordinate.longitude == item.coordinate.longitude) {
+                        return previousItem;
+                    } else {
+                        return null;
+                    }
                 }
             }
         }
-        return false;
+        return null;
     }
 
     Component.onCompleted: updateAltitudeModeText()
@@ -220,9 +222,58 @@ Rectangle {
                     showUnits:          true
                     numericValuesOnly:  true
                     visible:            missionItem.isLandCommand
-                    enabled:            checkLandingPoint()
-                    onEditingFinished:  console.log("missionItemCoordinate1 " + missionItem.coordinate.latitude + " missionItemCoordinate2 " + missionItem.coordinate.longitude)
-                                        // moveLastWaypointFromLandingPoint()
+                    enabled:            checkLandingPoint() != null ? true : false
+                    onEditingFinished: {
+                        let previousItem = checkLandingPoint();
+                        if (previousItem) {
+                            const EARTH_RADIUS = 6371000; // Radius of the Earth in meters
+
+                            function toRadians(degrees) {
+                                return degrees * Math.PI / 180;
+                            }
+
+                            function haversineDistance(coord1, coord2) {
+                                let lat1 = toRadians(coord1.latitude);
+                                let lon1 = toRadians(coord1.longitude);
+                                let lat2 = toRadians(coord2.latitude);
+                                let lon2 = toRadians(coord2.longitude);
+
+                                let dLat = lat2 - lat1;
+                                let dLon = lon2 - lon1;
+
+                                let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                                        Math.cos(lat1) * Math.cos(lat2) *
+                                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+                                let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                                return EARTH_RADIUS * c;
+                            }
+
+                            let distance = haversineDistance(previousItem.coordinate, missionItem.coordinate);
+
+                            if (distance === 150) {
+                                return; // Already at 150 meters
+                            }
+
+                            // Adjust point1 to be at 150 meters from point2
+                            let scale = 150 / distance; // Scale factor
+                            let lat1 = previousItem.coordinate.latitude;
+                            let lon1 = previousItem.coordinate.longitude;
+                            let lat2 = missionItem.coordinate.latitude;
+                            let lon2 = missionItem.coordinate.longitude;
+
+                            for (let i = 0; i < _missionController.visualItems.count; i++) {
+                                let item = _missionController.visualItems.get(i);
+                                if (item.coordinate.latitude == lat1
+                                    && item.coordinate.longitude == lon1) {
+                                    let newLat = lat2 + (lat1 - lat2) * scale;
+                                    let newLon = lon2 + (lon1 - lon2) * scale;
+                                    _missionController.visualItems.get(i).coordinate = QtPositioning.coordinate(newLat, newLon);
+                                    return;
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
