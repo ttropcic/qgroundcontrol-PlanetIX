@@ -182,6 +182,24 @@ Rectangle {
                     text:               qsTr("Actual AMSL alt sent: %1 %2").arg(missionItem.amslAltAboveTerrain.valueString).arg(missionItem.amslAltAboveTerrain.units)
                     visible:            missionItem.altitudeMode === QGroundControl.AltitudeModeCalcAboveTerrain
                 }
+
+                QGCLabel {
+                    Layout.fillWidth:   true
+                    wrapMode:           Text.WordWrap
+                    font.pointSize:     ScreenTools.smallFontPointSize
+                    text:               qsTr("Distance between last waypoint and Land point")
+                    visible:            missionItem.isLandCommand
+                }
+
+                QGCTextField {
+                    id:                 distanceWaypointLandField
+                    Layout.fillWidth:   true
+                    text:               "150.00"
+                    unitsLabel:         "m"
+                    showUnits:          true
+                    numericValuesOnly:  true
+                    onEditingFinished:  console.log("TEEEEEEEEEEEEEEEEEEST")
+                }
             }
 
             ColumnLayout {
