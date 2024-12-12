@@ -210,14 +210,14 @@ Rectangle {
                     Layout.fillWidth:   true
                     wrapMode:           Text.WordWrap
                     font.pointSize:     ScreenTools.smallFontPointSize
-                    text:               qsTr("Distance between last waypoint and Land point")
+                    text:               qsTr("Distance between last waypoint and Land point (Default: 150 m)")
                     visible:            missionItem.isLandCommand
                 }
 
                 QGCTextField {
                     id:                 distanceWaypointLandField
                     Layout.fillWidth:   true
-                    text:               "150.00"
+                    text:               "150.00" // Default value
                     unitsLabel:         "m"
                     showUnits:          true
                     numericValuesOnly:  true
@@ -249,14 +249,25 @@ Rectangle {
                                 return EARTH_RADIUS * c;
                             }
 
+                            let targetDistance = parseFloat(distanceWaypointLandField.text);
+                            if (targetDistance < 150) {
+                                console.log("Not applying distance between last waypoint and Land point lesser than 150 m.");
+                                return;
+                            }
+
+                            if (isNaN(targetDistance)) {
+                                console.log("Invalid distance value, using default of 150 meters");
+                                targetDistance = 150.00; // Fallback to default
+                            }
+
                             let distance = haversineDistance(previousItem.coordinate, missionItem.coordinate);
 
-                            if (distance === 150) {
-                                return; // Already at 150 meters
+                            if (distance === targetDistance) {
+                                return;
                             }
 
                             // Adjust point1 to be at 150 meters from point2
-                            let scale = 150 / distance; // Scale factor
+                            let scale = targetDistance / distance; // Scale factor
                             let lat1 = previousItem.coordinate.latitude;
                             let lon1 = previousItem.coordinate.longitude;
                             let lat2 = missionItem.coordinate.latitude;
