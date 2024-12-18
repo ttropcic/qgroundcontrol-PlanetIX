@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtPositioning 5.15
 
 import QGroundControl
 import QGroundControl.ScreenTools
@@ -16,6 +17,7 @@ Rectangle {
     color:  qgcPal.windowShadeDark
     radius: _radius
 
+    property var  _missionController:       _planMasterController.missionController
     property bool _specifiesAltitude:       missionItem.specifiesAltitude
     property real _margin:                  ScreenTools.defaultFontPixelHeight / 2
     property real _altRectMargin:           ScreenTools.defaultFontPixelWidth / 2
@@ -23,6 +25,9 @@ Rectangle {
     property int  _globalAltMode:           missionItem.masterController.missionController.globalAltitudeMode
     property bool _globalAltModeIsMixed:    _globalAltMode == QGroundControl.AltitudeModeMixed
     property real _radius:                  ScreenTools.defaultFontPixelWidth / 2
+
+    readonly property real distanceWaypointLandFieldDefault:       150.0 // Default value
+    readonly property real distanceWaypointLandFieldDefaultOffset: 5.0 // Offset from default value
 
     function updateAltitudeModeText() {
         if (missionItem.altitudeMode === QGroundControl.AltitudeModeRelative) {
@@ -36,6 +41,27 @@ Rectangle {
         } else {
             altModeLabel.text = qsTr("Internal Error")
         }
+    }
+
+    function checkLandingPoint() {
+        for (let i = 0; i < _missionController.visualItems.count; i++) {
+            let item = _missionController.visualItems.get(i);
+            if (i > 1) {
+                let previousItem = _missionController.visualItems.get(i - 1);
+                if ((previousItem.command == 16 // MAV_CMD_NAV_WAYPOINT for regular waypoint
+                    || previousItem.command == 3000) // MAV_CMD_DO_VTOL_TRANSITION=3000 for vtol transition point
+                    && missionItem.isLandCommand
+                    && item.isLandCommand) {
+                    if (missionItem.coordinate.latitude == item.coordinate.latitude
+                        && missionItem.coordinate.longitude == item.coordinate.longitude) {
+                        return previousItem;
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     Component.onCompleted: updateAltitudeModeText()
@@ -181,6 +207,113 @@ Rectangle {
                     font.pointSize:     ScreenTools.smallFontPointSize
                     text:               qsTr("Actual AMSL alt sent: %1 %2").arg(missionItem.amslAltAboveTerrain.valueString).arg(missionItem.amslAltAboveTerrain.units)
                     visible:            missionItem.altitudeMode === QGroundControl.AltitudeModeCalcAboveTerrain
+                }
+
+                QGCLabel {
+                    Layout.fillWidth:   true
+                    wrapMode:           Text.WordWrap
+                    font.pointSize:     ScreenTools.smallFontPointSize
+                    text:               qsTr("Distance between last waypoint and Land point (Interval allowed: ["
+                                            + distanceWaypointLandFieldDefault
+                                            + " m, "
+                                            + (distanceWaypointLandFieldDefault + distanceWaypointLandFieldDefaultOffset)
+                                            + " m])")
+                    visible:            missionItem.isLandCommand
+                }
+
+                QGCTextField {
+                    id:                 distanceWaypointLandField
+                    Layout.fillWidth:   true
+                    text:               distanceWaypointLandFieldDefault
+                    unitsLabel:         "m"
+                    showUnits:          true
+                    numericValuesOnly:  true
+                    visible:            missionItem.isLandCommand
+                    enabled:            checkLandingPoint() != null ? true : false
+                    onEditingFinished: {
+                        let previousItem = checkLandingPoint();
+
+                        if (previousItem) {
+                            const EARTH_RADIUS = 6371000; // Radius of the Earth in meters
+
+                            function toRadians(degrees) {
+                                return degrees * Math.PI / 180;
+                            }
+
+                            function haversineDistance(coord1, coord2) {
+                                let lat1 = toRadians(coord1.latitude);
+                                let lon1 = toRadians(coord1.longitude);
+                                let lat2 = toRadians(coord2.latitude);
+                                let lon2 = toRadians(coord2.longitude);
+
+                                let dLat = lat2 - lat1;
+                                let dLon = lon2 - lon1;
+
+                                let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                                        Math.cos(lat1) * Math.cos(lat2) *
+                                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+                                let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                                return EARTH_RADIUS * c;
+                            }
+
+                            if (previousItem.command == 3000) { // MAV_CMD_DO_VTOL_TRANSITION=3000 for vtol transition point
+                                let foundVTOLItem = false;
+                                for (let i = _missionController.visualItems.count - 1; i >= 0; --i) {
+                                    if (!foundVTOLItem 
+                                        && previousItem.command == _missionController.visualItems.get(i).command) {
+                                        foundVTOLItem = true;
+                                        continue;
+                                    }
+
+                                    if (foundVTOLItem
+                                        && _missionController.visualItems.get(i).command == 16) { // MAV_CMD_NAV_WAYPOINT for regular waypoint
+                                        previousItem = _missionController.visualItems.get(i); // if VTOL transition is point before Landing point,
+                                                                                              // look for waypoint right before this VTOL transition point
+                                        break;
+                                    }
+                                }
+                            }
+
+                            let targetDistance = parseFloat(distanceWaypointLandField.text);
+
+                            if (isNaN(targetDistance)) {
+                                console.log("Invalid distance value, using default of " + distanceWaypointLandFieldDefault + " meters");
+                                targetDistance = distanceWaypointLandFieldDefault; // Fallback to default
+                            } else if (targetDistance < distanceWaypointLandFieldDefault || targetDistance > distanceWaypointLandFieldDefault + distanceWaypointLandFieldDefaultOffset) {
+                                console.log("Distance between last waypoint and Land point must be in interval: ["
+                                            + distanceWaypointLandFieldDefault
+                                            + " m, "
+                                            + (distanceWaypointLandFieldDefault + distanceWaypointLandFieldDefaultOffset)
+                                            + " m].");
+                                return;
+                            }
+
+                            let distance = haversineDistance(previousItem.coordinate, missionItem.coordinate);
+
+                            if (distance == targetDistance) {
+                                return;
+                            }
+
+                            // Adjust point1 to be at targetDistance meters from point2
+                            let scale = targetDistance / distance; // Scale factor
+                            let lat1 = previousItem.coordinate.latitude;
+                            let lon1 = previousItem.coordinate.longitude;
+                            let lat2 = missionItem.coordinate.latitude;
+                            let lon2 = missionItem.coordinate.longitude;
+
+                            for (let i = 0; i < _missionController.visualItems.count; i++) {
+                                let item = _missionController.visualItems.get(i);
+                                if (item.coordinate.latitude == lat1
+                                    && item.coordinate.longitude == lon1) {
+                                    let newLat = lat2 + (lat1 - lat2) * scale;
+                                    let newLon = lon2 + (lon1 - lon2) * scale;
+                                    _missionController.visualItems.get(i).coordinate = QtPositioning.coordinate(newLat, newLon);
+                                    return;
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
