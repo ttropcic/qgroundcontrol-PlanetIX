@@ -26,6 +26,9 @@ Rectangle {
     property bool _globalAltModeIsMixed:    _globalAltMode == QGroundControl.AltitudeModeMixed
     property real _radius:                  ScreenTools.defaultFontPixelWidth / 2
 
+    readonly property real distanceWaypointLandFieldDefault:       150.0 // Default value
+    readonly property real distanceWaypointLandFieldDefaultOffset: 5.0 // Offset from default value
+
     function updateAltitudeModeText() {
         if (missionItem.altitudeMode === QGroundControl.AltitudeModeRelative) {
             altModeLabel.text = QGroundControl.altitudeModeShortDescription(QGroundControl.AltitudeModeRelative)
@@ -210,14 +213,18 @@ Rectangle {
                     Layout.fillWidth:   true
                     wrapMode:           Text.WordWrap
                     font.pointSize:     ScreenTools.smallFontPointSize
-                    text:               qsTr("Distance between last waypoint and Land point (Default: 150 m)")
+                    text:               qsTr("Distance between last waypoint and Land point (Interval allowed: ["
+                                            + distanceWaypointLandFieldDefault
+                                            + " m, "
+                                            + (distanceWaypointLandFieldDefault + distanceWaypointLandFieldDefaultOffset)
+                                            + " m])")
                     visible:            missionItem.isLandCommand
                 }
 
                 QGCTextField {
                     id:                 distanceWaypointLandField
                     Layout.fillWidth:   true
-                    text:               "150.00" // Default value
+                    text:               distanceWaypointLandFieldDefault
                     unitsLabel:         "m"
                     showUnits:          true
                     numericValuesOnly:  true
@@ -225,6 +232,7 @@ Rectangle {
                     enabled:            checkLandingPoint() != null ? true : false
                     onEditingFinished: {
                         let previousItem = checkLandingPoint();
+
                         if (previousItem) {
                             const EARTH_RADIUS = 6371000; // Radius of the Earth in meters
 
@@ -269,23 +277,25 @@ Rectangle {
 
                             let targetDistance = parseFloat(distanceWaypointLandField.text);
 
-                            if (targetDistance < 150) {
-                                console.log("Not applying distance between last waypoint and Land point less than 150 m.");
-                                return;
-                            }
-
                             if (isNaN(targetDistance)) {
-                                console.log("Invalid distance value, using default of 150 meters");
-                                targetDistance = 150.00; // Fallback to default
+                                console.log("Invalid distance value, using default of " + distanceWaypointLandFieldDefault + " meters");
+                                targetDistance = distanceWaypointLandFieldDefault; // Fallback to default
+                            } else if (targetDistance < distanceWaypointLandFieldDefault || targetDistance > distanceWaypointLandFieldDefault + distanceWaypointLandFieldDefaultOffset) {
+                                console.log("Distance between last waypoint and Land point must be in interval: ["
+                                            + distanceWaypointLandFieldDefault
+                                            + " m, "
+                                            + (distanceWaypointLandFieldDefault + distanceWaypointLandFieldDefaultOffset)
+                                            + " m].");
+                                return;
                             }
 
                             let distance = haversineDistance(previousItem.coordinate, missionItem.coordinate);
 
-                            if (distance === targetDistance) {
+                            if (distance == targetDistance) {
                                 return;
                             }
 
-                            // Adjust point1 to be at 150 meters from point2
+                            // Adjust point1 to be at targetDistance meters from point2
                             let scale = targetDistance / distance; // Scale factor
                             let lat1 = previousItem.coordinate.latitude;
                             let lon1 = previousItem.coordinate.longitude;
