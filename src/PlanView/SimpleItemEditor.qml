@@ -249,9 +249,28 @@ Rectangle {
                                 return EARTH_RADIUS * c;
                             }
 
+                            if (previousItem.command == 3000) { // MAV_CMD_DO_VTOL_TRANSITION=3000 for vtol transition point
+                                let foundVTOLItem = false;
+                                for (let i = _missionController.visualItems.count - 1; i >= 0; --i) {
+                                    if (!foundVTOLItem 
+                                        && previousItem.command == _missionController.visualItems.get(i).command) {
+                                        foundVTOLItem = true;
+                                        continue;
+                                    }
+
+                                    if (foundVTOLItem
+                                        && _missionController.visualItems.get(i).command == 16) { // MAV_CMD_NAV_WAYPOINT for regular waypoint
+                                        previousItem = _missionController.visualItems.get(i); // if VTOL transition is point before Landing point,
+                                                                                              // look for waypoint right before this VTOL transition point
+                                        break;
+                                    }
+                                }
+                            }
+
                             let targetDistance = parseFloat(distanceWaypointLandField.text);
+
                             if (targetDistance < 150) {
-                                console.log("Not applying distance between last waypoint and Land point lesser than 150 m.");
+                                console.log("Not applying distance between last waypoint and Land point less than 150 m.");
                                 return;
                             }
 
