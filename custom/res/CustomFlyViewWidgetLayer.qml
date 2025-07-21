@@ -61,20 +61,20 @@ Item {
         leftEdgeBottomInset:    virtualJoystickMultiTouch.visible ? virtualJoystickMultiTouch.leftEdgeBottomInset : parentToolInsets.leftEdgeBottomInset
         rightEdgeTopInset:      topRightColumnLayout.rightEdgeTopInset
         rightEdgeCenterInset:   topRightColumnLayout.rightEdgeCenterInset
-        rightEdgeBottomInset:   bottomRightRowLayout.rightEdgeBottomInset
+        //rightEdgeBottomInset:   bottomRightRowLayout.rightEdgeBottomInset
         topEdgeLeftInset:       toolStrip.topEdgeLeftInset
         topEdgeCenterInset:     mapScale.topEdgeCenterInset
         topEdgeRightInset:      topRightColumnLayout.topEdgeRightInset
         bottomEdgeLeftInset:    virtualJoystickMultiTouch.visible ? virtualJoystickMultiTouch.bottomEdgeLeftInset : parentToolInsets.bottomEdgeLeftInset
-        bottomEdgeCenterInset:  bottomRightRowLayout.bottomEdgeCenterInset
-        bottomEdgeRightInset:   virtualJoystickMultiTouch.visible ? virtualJoystickMultiTouch.bottomEdgeRightInset : bottomRightRowLayout.bottomEdgeRightInset
+        //bottomEdgeCenterInset:  bottomRightRowLayout.bottomEdgeCenterInset
+        //bottomEdgeRightInset:   virtualJoystickMultiTouch.visible ? virtualJoystickMultiTouch.bottomEdgeRightInset : bottomRightRowLayout.bottomEdgeRightInset
     }
 
     FlyViewTopRightColumnLayout {
         id:                 topRightColumnLayout
         anchors.margins:    _layoutMargin
         anchors.top:        parent.top
-        anchors.bottom:     bottomRightRowLayout.top
+        //anchors.bottom:     bottomRightRowLayout.top
         anchors.right:      parent.right
         spacing:            _layoutSpacing
 
@@ -83,17 +83,18 @@ Item {
         property real rightEdgeCenterInset: rightEdgeTopInset
     }
 
-    FlyViewBottomRightRowLayout {
-        id:                 bottomRightRowLayout
-        anchors.margins:    _layoutMargin
-        anchors.bottom:     parent.bottom
-        anchors.right:      parent.right
-        spacing:            _layoutSpacing
+    // FlyViewBottomRightRowLayout {
+    //     id:                 bottomRightRowLayout
+    //     anchors.margins:    _layoutMargin
+    //     anchors.bottom:     parent.bottom
+    //     anchors.left:      parent.left
+    //     //anchors.horizontalCenter: parent.horizontalCenter
+    //     spacing:            _layoutSpacing
 
-        property real bottomEdgeRightInset:     height + _layoutMargin
-        property real bottomEdgeCenterInset:    bottomEdgeRightInset
-        property real rightEdgeBottomInset:     width + _layoutMargin
-    }
+    //     property real bottomEdgeRightInset:     height + _layoutMargin
+    //     property real bottomEdgeCenterInset:    bottomEdgeRightInset
+    //     property real rightEdgeBottomInset:     width + _layoutMargin
+    // }
 
     FlyViewMissionCompleteDialog {
         missionController:      _missionController
@@ -120,9 +121,9 @@ Item {
         height:                     Math.min(parent.height * 0.25, ScreenTools.defaultFontPixelWidth * 16)
         visible:                    _virtualJoystickEnabled && !QGroundControl.videoManager.fullScreen && !(_activeVehicle ? _activeVehicle.usingHighLatencyLink : false)
         anchors.bottom:             parent.bottom
-        anchors.bottomMargin:       bottomLoaderMargin
-        anchors.left:               parent.left   
-        anchors.leftMargin:         ( y > toolStrip.y + toolStrip.height ? toolStrip.width / 2 : toolStrip.width * 1.05 + toolStrip.x) 
+        //anchors.bottomMargin:       bottomLoaderMargin
+        anchors.left:               parent.left
+        anchors.leftMargin:         ( y > toolStrip.y + toolStrip.height ? toolStrip.width / 2 : toolStrip.width * 1.05 + toolStrip.x)
         source:                     "qrc:/qml/VirtualJoystick.qml"
         active:                     _virtualJoystickEnabled && !(_activeVehicle ? _activeVehicle.usingHighLatencyLink : false)
 
@@ -130,10 +131,10 @@ Item {
         property bool autoCenterThrottle:      QGroundControl.settingsManager.appSettings.virtualJoystickAutoCenterThrottle.rawValue
         property bool _virtualJoystickEnabled: QGroundControl.settingsManager.appSettings.virtualJoystick.rawValue
         property real bottomEdgeRightInset:    parent.height-y
-        property var  _pipViewMargin:          _pipView.visible ? parentToolInsets.bottomEdgeLeftInset + ScreenTools.defaultFontPixelHeight * 2 : 
-                                               bottomRightRowLayout.height + ScreenTools.defaultFontPixelHeight * 1.5
+        //property var  _pipViewMargin:          _pipView.visible ? parentToolInsets.bottomEdgeLeftInset + ScreenTools.defaultFontPixelHeight * 2 :
+        //                                       bottomRightRowLayout.height + ScreenTools.defaultFontPixelHeight * 1.5
 
-        property var  bottomLoaderMargin:      _pipViewMargin >= parent.height / 2 ? parent.height / 2 : _pipViewMargin
+        //property var  bottomLoaderMargin:      _pipViewMargin >= parent.height / 2 ? parent.height / 2 : _pipViewMargin
 
         // Width is difficult to access directly hence this hack which may not work in all circumstances
         property real leftEdgeBottomInset:  visible ? bottomEdgeLeftInset + width/18 - ScreenTools.defaultFontPixelHeight*2 : 0
@@ -147,7 +148,7 @@ Item {
         //Loader status logic
         onLoaded: {
             if (virtualJoystickMultiTouch.visible) {
-                virtualJoystickMultiTouch.item.calibration = true 
+                virtualJoystickMultiTouch.item.calibration = true
                 virtualJoystickMultiTouch.item.uiTotalWidth = rootWidth
                 virtualJoystickMultiTouch.item.uiRealX = itemX
             } else {
@@ -224,120 +225,120 @@ Item {
         }
     }
     //Message Console
-    QGCFlickable {
-        id:     scrollableMessageArea
-        width:  parent.width / 3
-        height: parent.height / 10
-        anchors {
-            bottom:           parent.bottom
-            bottomMargin:     parent.height * 0.01
-            horizontalCenter: parent.horizontalCenter
-        }
-        visible: true
+    // QGCFlickable {
+    //     id:     scrollableMessageArea
+    //     width:  parent.width / 3
+    //     height: parent.height / 10
+    //     anchors {
+    //         bottom:           parent.bottom
+    //         bottomMargin:     parent.height * 0.01
+    //         horizontalCenter: parent.horizontalCenter
+    //     }
+    //     visible: true
 
-        property var qgcPal:         QGroundControl.globalPalette
+    //     property var qgcPal:         QGroundControl.globalPalette
 
-        contentWidth:  backgroundOfMessageText.width
-        contentHeight: backgroundOfMessageText.height
-        clip:          true
+    //     contentWidth:  backgroundOfMessageText.width
+    //     contentHeight: backgroundOfMessageText.height
+    //     clip:          true
 
-        TextArea.flickable: TextArea {
-            id:                     messageText
-            width:                  parent.width
-            height:                 parent.height
-            readOnly:               true
-            textFormat:             TextEdit.RichText
-            color:                  qgcPal.text
-            placeholderText:        qsTr("No Messages")
-            placeholderTextColor:   qgcPal.text
-            padding:                0
-            background:             Rectangle {
-                                        id: backgroundOfMessageText
-                                        width:  scrollableMessageArea.width
-                                        height: scrollableMessageArea.height
-                                        color:  qgcPal.window
-                                    }
-            visible:                true
-            focus:                  true
+    //     TextArea.flickable: TextArea {
+    //         id:                     messageText
+    //         width:                  parent.width
+    //         height:                 parent.height
+    //         readOnly:               true
+    //         textFormat:             TextEdit.RichText
+    //         color:                  qgcPal.text
+    //         placeholderText:        qsTr("No Messages")
+    //         placeholderTextColor:   qgcPal.text
+    //         padding:                0
+    //         background:             Rectangle {
+    //                                     id: backgroundOfMessageText
+    //                                     width:  scrollableMessageArea.width
+    //                                     height: scrollableMessageArea.height
+    //                                     color:  qgcPal.window
+    //                                 }
+    //         visible:                true
+    //         focus:                  true
 
-            property bool _noMessages: messageText.length === 0
-            property var  _fact:       null
+    //         property bool _noMessages: messageText.length === 0
+    //         property var  _fact:       null
 
-            function formatMessage(message) {
-                message = message.replace(new RegExp("<#E>", "g"), "color: " + qgcPal.warningText + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
-                message = message.replace(new RegExp("<#I>", "g"), "color: " + qgcPal.warningText + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
-                message = message.replace(new RegExp("<#N>", "g"), "color: " + qgcPal.text + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
-                return message;
-            }
+    //         function formatMessage(message) {
+    //             message = message.replace(new RegExp("<#E>", "g"), "color: " + qgcPal.warningText + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
+    //             message = message.replace(new RegExp("<#I>", "g"), "color: " + qgcPal.warningText + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
+    //             message = message.replace(new RegExp("<#N>", "g"), "color: " + qgcPal.text + "; font: " + (ScreenTools.defaultFontPointSize.toFixed(0)) + "pt monospace;");
+    //             return message;
+    //         }
 
-            Component.onCompleted: {
-                if (_activeVehicle && _activeVehicle.formattedMessages) {
-                    messageText.text = messageText.formatMessage(_activeVehicle.formattedMessages)
-                    _activeVehicle.resetAllMessages()
-                }
-            }
+    //         Component.onCompleted: {
+    //             if (_activeVehicle && _activeVehicle.formattedMessages) {
+    //                 messageText.text = messageText.formatMessage(_activeVehicle.formattedMessages)
+    //                 _activeVehicle.resetAllMessages()
+    //             }
+    //         }
 
-            Connections {
-                target:                 _activeVehicle
-                onNewFormattedMessage: (formattedMessage) => { messageText.insert(messageText.length, messageText.formatMessage(formattedMessage)) }
-            }
+    //         Connections {
+    //             target:                 _activeVehicle
+    //             onNewFormattedMessage: (formattedMessage) => { messageText.insert(messageText.length, messageText.formatMessage(formattedMessage)) }
+    //         }
 
-            FactPanelController {
-                id: controller
-            }
+    //         FactPanelController {
+    //             id: controller
+    //         }
 
-            onLinkActivated: (link) => {
-                if (link.startsWith('param://')) {
-                    var paramName = link.substr(8);
-                    _fact = controller.getParameterFact(-1, paramName, true)
-                    if (_fact != null) {
-                        paramEditorDialogComponent.createObject(mainWindow).open()
-                    }
-                } else {
-                    Qt.openUrlExternally(link);
-                }
-            }
+    //         onLinkActivated: (link) => {
+    //             if (link.startsWith('param://')) {
+    //                 var paramName = link.substr(8);
+    //                 _fact = controller.getParameterFact(-1, paramName, true)
+    //                 if (_fact != null) {
+    //                     paramEditorDialogComponent.createObject(mainWindow).open()
+    //                 }
+    //             } else {
+    //                 Qt.openUrlExternally(link);
+    //             }
+    //         }
 
-            Component {
-                id: paramEditorDialogComponent
+    //         Component {
+    //             id: paramEditorDialogComponent
 
-                ParameterEditorDialog {
-                    title:          qsTr("Edit Parameter")
-                    fact:           messageText._fact
-                    destroyOnClose: true
-                }
-            }
+    //             ParameterEditorDialog {
+    //                 title:          qsTr("Edit Parameter")
+    //                 fact:           messageText._fact
+    //                 destroyOnClose: true
+    //             }
+    //         }
 
-            Rectangle {
-                anchors.right: parent.right
-                anchors.top:   parent.top
-                width:         ScreenTools.defaultFontPixelHeight * 1.25
-                height:        width
-                radius:        width / 2
-                color:         QGroundControl.globalPalette.button
-                border.color:  QGroundControl.globalPalette.buttonText
-                visible:       !messageText._noMessages
+    //         Rectangle {
+    //             anchors.right: parent.right
+    //             anchors.top:   parent.top
+    //             width:         ScreenTools.defaultFontPixelHeight * 1.25
+    //             height:        width
+    //             radius:        width / 2
+    //             color:         QGroundControl.globalPalette.button
+    //             border.color:  QGroundControl.globalPalette.buttonText
+    //             visible:       !messageText._noMessages
 
-                QGCColoredImage {
-                    anchors.margins:   ScreenTools.defaultFontPixelHeight * 0.25
-                    anchors.centerIn:  parent
-                    anchors.fill:      parent
-                    sourceSize.height: height
-                    source:            "/res/TrashDelete.svg"
-                    fillMode:          Image.PreserveAspectFit
-                    mipmap:            true
-                    smooth:            true
-                    color:             qgcPal.text
-                }
+    //             QGCColoredImage {
+    //                 anchors.margins:   ScreenTools.defaultFontPixelHeight * 0.25
+    //                 anchors.centerIn:  parent
+    //                 anchors.fill:      parent
+    //                 sourceSize.height: height
+    //                 source:            "/res/TrashDelete.svg"
+    //                 fillMode:          Image.PreserveAspectFit
+    //                 mipmap:            true
+    //                 smooth:            true
+    //                 color:             qgcPal.text
+    //             }
 
-                QGCMouseArea {
-                    fillItem: parent
-                    onClicked: {
-                        _activeVehicle.clearMessages()
-                        messageText.text = ""
-                    }
-                }
-            }
-        }
-    }
+    //             QGCMouseArea {
+    //                 fillItem: parent
+    //                 onClicked: {
+    //                     _activeVehicle.clearMessages()
+    //                     messageText.text = ""
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 }

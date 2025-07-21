@@ -9,10 +9,10 @@ set_property(DIRECTORY ${CMAKE_SOURCE_DIR}
     CUSTOMCLASS=CustomPlugin
 )
 
-find_package(Python)
-if(PYTHON_FOUND)
+find_package(Python3)
+if(PYTHON3_FOUND)
     execute_process(
-        COMMAND ${PYTHON_EXECUTABLE}
+        COMMAND ${Python3_EXECUTABLE}
         RESULT_VARIABLE PYTHON_RESULT
         OUTPUT_VARIABLE PYTHON_OUTPUT
         ERROR_VARIABLE PYTHON_ERROR

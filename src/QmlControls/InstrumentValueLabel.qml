@@ -33,8 +33,8 @@ ColumnLayout {
     QGCColoredImage {
         id:                         valueIcon
         Layout.alignment:           Qt.AlignVCenter
-        height:                     _tightHeight * 0.75
-        width:                      _tightHeight * 0.85
+        height:                     _tightHeight * 1.2 //_tightHeight * 0.75
+        width:                      _tightHeight * 1.35 //_tightHeight * 0.85
         sourceSize.height:          height
         fillMode:                   Image.PreserveAspectFit
         mipmap:                     true

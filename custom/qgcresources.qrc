@@ -45,6 +45,8 @@
 		<file alias="SplashScreen">../resources/SplashScreen.png</file>
 		<file alias="Stop">../resources/Stop.svg</file>
 		<file alias="takeoff.svg">../resources/takeoff.svg</file>
+		<file alias="TerminateButtonNotPressed.svg">../resources/TerminateButtonNotPressed.svg</file>
+		<file alias="TerminateButtonPressed.svg">../resources/TerminateButtonPressed.svg</file>
 		<file alias="TrashDelete.svg">../resources/TrashDelete.svg</file>
 		<file alias="waves.svg">../resources/waves.svg</file>
 		<file alias="wind-guru.svg">../resources/wind-guru.svg</file>
@@ -106,5 +108,8 @@
 	</qresource>
 	<qresource prefix="/opengl">
 		<file>../resources/opengl/buglist.json</file>
+	</qresource>
+	<qresource prefix="/gimbal">
+		<file alias="payload.svg">../resources/gimbal/payload.svg</file>
 	</qresource>
 </RCC>

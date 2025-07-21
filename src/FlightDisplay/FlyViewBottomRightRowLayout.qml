@@ -17,11 +17,11 @@ import QGroundControl.FlightDisplay
 RowLayout {
     TelemetryValuesBar {
         Layout.alignment:   Qt.AlignBottom
-        extraWidth:         instrumentPanel.extraValuesWidth
+        // extraWidth:         instrumentPanel.extraValuesWidth
     }
 
-    FlyViewInstrumentPanel {
-        id:         instrumentPanel
-        visible:    QGroundControl.corePlugin.options.flyView.showInstrumentPanel && _showSingleVehicleUI
-    }
+    // FlyViewInstrumentPanel {
+    //     id:         instrumentPanel
+    //     visible:    QGroundControl.corePlugin.options.flyView.showInstrumentPanel && _showSingleVehicleUI
+    // }
 }

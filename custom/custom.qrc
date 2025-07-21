@@ -30,8 +30,10 @@
     </qresource>
     <qresource prefix="/qml">
         <file alias="QGroundControl/FlightDisplay/FlyViewCustomLayer.qml">res/CustomFlyViewOverlay.qml</file>
+	<file alias="QGroundControl/FlightDisplay/FlyViewWidgetLayer.qml">res/CustomFlyViewWidgetLayer.qml</file>
+	<file alias="QGroundControl/FlightDisplay/FlyViewTopRightColumnLayout.qml">res/CustomFlyViewTopRightColumnLayout.qml</file>
     </qresource>
     <qresource prefix="/res">
-		<file alias="QGCLogoFull">res/QGCLogoFull.svg</file>
+        <file alias="QGCLogoFull">res/QGCLogoFull.svg</file>
     </qresource>
 </RCC>
