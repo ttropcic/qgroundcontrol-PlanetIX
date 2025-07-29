@@ -32,11 +32,7 @@
         <file alias="QGroundControl/FlightDisplay/FlyViewCustomLayer.qml">res/CustomFlyViewOverlay.qml</file>
         <file alias="QGroundControl/FlightDisplay/FlyViewWidgetLayer.qml">res/CustomFlyViewWidgetLayer.qml</file>
         <file alias="QGroundControl/FlightDisplay/FlyViewTopRightColumnLayout.qml">res/CustomFlyViewTopRightColumnLayout.qml</file>
-	<file alias="QGroundControl/FlightDisplay/TelemetryValuesBar.qml">res/CustomTelemetryValuesBar.qml</file>
 	<file alias="QGroundControl/FlightDisplay/FlyViewBottomRightRowLayout.qml">res/CustomFlyViewBottomRightRowLayout.qml</file>
-	<file alias="QGroundControl/Controls/InstrumentValueLabel.qml">res/CustomInstrumentValueLabel.qml</file>
-	<file alias="QGroundControl/Controls/InstrumentValueValue.qml">res/CustomInstrumentValueValue.qml</file>
-	<file alias="QGroundControl/Controls/HorizontalFactValueGrid.qml">res/CustomHorizontalFactValueGrid.qml</file>
     </qresource>
     <qresource prefix="/res">
         <file alias="QGCLogoFull">res/QGCLogoFull.svg</file>

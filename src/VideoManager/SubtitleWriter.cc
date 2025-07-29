@@ -52,7 +52,7 @@ void SubtitleWriter::startCapturingTelemetry(const QString& videoFile)
     // Gather the facts currently displayed into _facts
     FactValueGrid* grid = new FactValueGrid();
     grid->setProperty("userSettingsGroup", HorizontalFactValueGrid::telemetryBarUserSettingsGroup);
-    grid->setProperty("defaultSettingsGroup", HorizontalFactValueGrid::telemetryBarDefaultSettingsGroup);
+    //grid->setProperty("defaultSettingsGroup", HorizontalFactValueGrid::telemetryBarDefaultSettingsGroup);
     grid->_loadSettings();
     for (int colIndex = 0; colIndex < grid->columns()->count(); colIndex++) {
         QmlObjectListModel* list = grid->columns()->value<QmlObjectListModel*>(colIndex);

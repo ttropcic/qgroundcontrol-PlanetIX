@@ -6,7 +6,7 @@ import QGroundControl.ScreenTools
 import QGroundControl.Palette
 
 ColumnLayout {
-    id:             control    
+    id:             control
     spacing:        _margins / 2
     implicitWidth:  _contentLayout.implicitWidth + (_margins * 2)
     implicitHeight: _contentLayout.implicitHeight + (_margins * 2)
@@ -18,8 +18,10 @@ ColumnLayout {
     property string heading
     property string headingDescription
     property bool   showDividers:       true
+    property color  layoutColor:        "transparent"
 
     property real _margins: ScreenTools.defaultFontPixelHeight / 2
+    property real headingFontSize: ScreenTools.defaultFontPointSize + 1
 
     ColumnLayout {
         Layout.leftMargin:  _margins
@@ -27,13 +29,13 @@ ColumnLayout {
         spacing:            0
         visible:            heading !== ""
 
-        QGCLabel { 
+        QGCLabel {
             text:           heading
             font.pointSize: ScreenTools.defaultFontPointSize + 1
             font.bold:      true
         }
 
-        QGCLabel { 
+        QGCLabel {
             Layout.fillWidth:   true
             text:               headingDescription
             wrapMode:           Text.WordWrap
@@ -47,7 +49,7 @@ ColumnLayout {
         Layout.fillWidth:   true
         implicitWidth:      _contentLayout.implicitWidth + (_margins * 2)
         implicitHeight:     _contentLayout.implicitHeight + (_margins * 2)
-        color:              "transparent"
+        color:              layoutColor//"transparent"
         border.color:       QGroundControl.globalPalette.groupBorder
         border.width:       1
         radius:             ScreenTools.defaultFontPixelHeight / 2
@@ -61,7 +63,7 @@ ColumnLayout {
                 width:              parent.width - (_margins * 2)
                 height:             1
                 color:              QGroundControl.globalPalette.groupBorder
-                visible:            _contentItem.visible && 
+                visible:            _contentItem.visible &&
                                         _contentItem.width !== 0 && _contentItem.height !== 0 &&
                                         index < _contentLayout.children.length - 1
 

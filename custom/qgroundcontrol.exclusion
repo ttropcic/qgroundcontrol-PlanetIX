@@ -1,8 +1,4 @@
         <file alias="QGroundControl/FlightDisplay/FlyViewCustomLayer.qml">src/FlightDisplay/FlyViewCustomLayer.qml</file>
 	<file alias="QGroundControl/FlightDisplay/FlyViewWidgetLayer.qml">src/FlightDisplay/FlyViewWidgetLayer.qml</file>
 	<file alias="QGroundControl/FlightDisplay/FlyViewTopRightColumnLayout.qml">src/FlightDisplay/FlyViewTopRightColumnLayout.qml</file>
-	<file alias="QGroundControl/FlightDisplay/TelemetryValuesBar.qml">src/FlightDisplay/TelemetryValuesBar.qml</file>
 	<file alias="QGroundControl/FlightDisplay/FlyViewBottomRightRowLayout.qml">src/FlightDisplay/FlyViewBottomRightRowLayout.qml</file>
-	<file alias="QGroundControl/Controls/InstrumentValueLabel.qml">src/QmlControls/InstrumentValueLabel.qml</file>
-	<file alias="QGroundControl/Controls/InstrumentValueValue.qml">src/QmlControls/InstrumentValueValue.qml</file>
-	<file alias="QGroundControl/Controls/HorizontalFactValueGrid.qml">src/QmlControls/HorizontalFactValueGrid.qml</file>

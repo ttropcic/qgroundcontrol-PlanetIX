@@ -14,20 +14,32 @@ import QGroundControl.Controls
 import QGroundControl.ScreenTools
 
 RowLayout {
-    property alias label:                   _labelLabel.text
+    property alias label:                  _labelLabel.text
     property alias labelText:              _label.text
     property real  labelPreferredWidth:    -1
 
+    property alias labelColor:              _label.color
+    property real fontSize:                 ScreenTools.defaultFontPointSize
+    property bool fontBoldLabelLabel:       false
+    property bool fontBoldLabel:            false
+    property int  fontPointSize:            0
+
     spacing: ScreenTools.defaultFontPixelWidth * 2
 
-    QGCLabel { 
+    QGCLabel {
         id:                 _labelLabel
-        Layout.fillWidth:   true 
+        Layout.fillWidth:   true
+        fontSizeQGCLabel:   fontSize
+        fontBoldQGCLabel:   fontBoldLabelLabel
+        font.pointSize:     fontPointSize
     }
 
     QGCLabel {
         id:                     _label
         Layout.preferredWidth:  labelPreferredWidth
+        fontSizeQGCLabel:       fontSize
+        fontBoldQGCLabel:       fontBoldLabel
+        font.pointSize:         fontPointSize
     }
 }
 

@@ -103,12 +103,15 @@
 		<file alias="QGroundControl/Controls/GPSIndicatorPage.qml">../src/UI/toolbar/GPSIndicatorPage.qml</file>
 		<file alias="QGroundControl/Controls/GeoFenceEditor.qml">../src/PlanView/GeoFenceEditor.qml</file>
 		<file alias="QGroundControl/Controls/GeoFenceMapVisuals.qml">../src/PlanView/GeoFenceMapVisuals.qml</file>
+		<file alias="QGroundControl/Controls/HorizontalFactValueGrid.qml">../src/QmlControls/HorizontalFactValueGrid.qml</file>
 		<file alias="QGroundControl/Controls/IndicatorButton.qml">../src/QmlControls/IndicatorButton.qml</file>
 		<file alias="QGroundControl/Controls/LabelledButton.qml">../src/QmlControls/LabelledButton.qml</file>
 		<file alias="QGroundControl/Controls/LabelledComboBox.qml">../src/QmlControls/LabelledComboBox.qml</file>
 		<file alias="QGroundControl/Controls/LabelledLabel.qml">../src/QmlControls/LabelledLabel.qml</file>
 		<file alias="QGroundControl/Controls/RemoteIDIndicatorPage.qml">../src/UI/toolbar/RemoteIDIndicatorPage.qml</file>
 		<file alias="QGroundControl/Controls/SettingsGroupLayout.qml">../src/QmlControls/SettingsGroupLayout.qml</file>
+		<file alias="QGroundControl/Controls/InstrumentValueLabel.qml">../src/QmlControls/InstrumentValueLabel.qml</file>
+		<file alias="QGroundControl/Controls/InstrumentValueValue.qml">../src/QmlControls/InstrumentValueValue.qml</file>
 		<file alias="QGroundControl/Controls/InstrumentValueEditDialog.qml">../src/QmlControls/InstrumentValueEditDialog.qml</file>
 		<file alias="QGroundControl/Controls/JoystickThumbPad.qml">../src/QmlControls/JoystickThumbPad.qml</file>
 		<file alias="QGroundControl/Controls/KMLOrSHPFileDialog.qml">../src/QmlControls/KMLOrSHPFileDialog.qml</file>
@@ -251,6 +254,7 @@
 		<file alias="QGroundControl/FlightDisplay/ProximityRadarValues.qml">../src/FlightDisplay/ProximityRadarValues.qml</file>
 		<file alias="QGroundControl/FlightDisplay/ProximityRadarVideoView.qml">../src/FlightDisplay/ProximityRadarVideoView.qml</file>
 		<file alias="QGroundControl/FlightDisplay/TerrainProgress.qml">../src/FlightDisplay/TerrainProgress.qml</file>
+		<file alias="QGroundControl/FlightDisplay/TelemetryValuesBar.qml">../src/FlightDisplay/TelemetryValuesBar.qml</file>
 		<file alias="QGroundControl/FlightDisplay/VehicleWarnings.qml">../src/FlightDisplay/VehicleWarnings.qml</file>
 		<file alias="QGroundControl/FlightDisplay/ObstacleDistanceOverlay.qml">../src/FlightDisplay/ObstacleDistanceOverlay.qml</file>
 		<file alias="QGroundControl/FlightDisplay/ObstacleDistanceOverlayMap.qml">../src/FlightDisplay/ObstacleDistanceOverlayMap.qml</file>
