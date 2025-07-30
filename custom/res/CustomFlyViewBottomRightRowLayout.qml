@@ -64,6 +64,24 @@ ColumnLayout {
             columns: 4
 
             LabelledLabel {
+                label:      qsTr("Relative Altitude")
+                labelText:  _activeVehicle && _activeVehicle.vehicle  && flightSettings.flightValuesAvailable.altitudeRelativeInfo
+                            ? _activeVehicle.vehicle.altitudeRelative.value.toFixed(1) + " " + _activeVehicle.vehicle.altitudeRelative.units
+                            : "N/A"
+                visible:    _activeVehicle
+                //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
+                labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.altitudeRelativeInfo
+                                    ? (_activeVehicle.vehicle.altitudeRelative.value < 50)
+                                        ? "red" : "green"
+                                    : "red"
+                fontBoldLabelLabel: true
+                fontBoldLabel:      true
+                fontPointSize:      ScreenTools.defaultFontPointSize
+                //backgroundColor: "wheat"
+                //backgroundOpacity: 0.3
+            }
+
+            LabelledLabel {
                 label:      qsTr("Air Speed")
                 labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.airSpeedInfo
                             ? _activeVehicle.vehicle.airSpeed.value.toFixed(1) + " " + _activeVehicle.vehicle.airSpeed.units
@@ -81,22 +99,24 @@ ColumnLayout {
                             : "red"
                 fontBoldLabelLabel: true
                 fontBoldLabel:      true
-                fontPointSize:      9
+                fontPointSize:      ScreenTools.defaultFontPointSize
+                //backgroundColor: "gray"
+                //backgroundOpacity: 0.3
             }
 
             LabelledLabel {
-                label:      qsTr("Ground Speed")
-                labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.groundSpeedInfo
-                            ? _activeVehicle.vehicle.groundSpeed.value.toFixed(2) + " " + _activeVehicle.vehicle.groundSpeed.units
+                label: qsTr("Wind Direction")
+                labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.windDirectionInfo
+                            ? _activeVehicle.wind.direction.value
                             : "N/A"
                 visible:    _activeVehicle
                 //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
-                labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.groundSpeedInfo
+                labelColor:         _activeVehicle && _activeVehicle.wind && flightSettings.flightValuesAvailable.windDirectionInfo
                                     ? qgcPal.text
                                     : "red"
                 fontBoldLabelLabel: true
                 fontBoldLabel:      true
-                fontPointSize:      9
+                fontPointSize:      ScreenTools.defaultFontPointSize
             }
 
             LabelledLabel {
@@ -111,23 +131,9 @@ ColumnLayout {
                                     : "red"
                 fontBoldLabelLabel: true
                 fontBoldLabel:      true
-                fontPointSize:      9
-            }
-
-            LabelledLabel {
-                label:      qsTr("Relative Altitude")
-                labelText:  _activeVehicle && _activeVehicle.vehicle  && flightSettings.flightValuesAvailable.altitudeRelativeInfo
-                            ? _activeVehicle.vehicle.altitudeRelative.value.toFixed(1) + " " + _activeVehicle.vehicle.altitudeRelative.units
-                            : "N/A"
-                visible:    _activeVehicle
-                //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
-                labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.altitudeRelativeInfo
-                                    ? (_activeVehicle.vehicle.altitudeRelative.value < 50)
-                                        ? "red" : "green"
-                                    : "red"
-                fontBoldLabelLabel: true
-                fontBoldLabel:      true
-                fontPointSize:      9
+                fontPointSize:      ScreenTools.defaultFontPointSize
+                //backgroundColor: "peachpuff"
+                //backgroundOpacity: 0.3
             }
 
             LabelledLabel {
@@ -143,38 +149,41 @@ ColumnLayout {
                                     : "red"
                 fontBoldLabelLabel: true
                 fontBoldLabel:      true
-                fontPointSize:      9
+                fontPointSize:      ScreenTools.defaultFontPointSize
+                //backgroundColor: "lightsteelblue"
+                //backgroundOpacity: 0.3
             }
 
             LabelledLabel {
-                label:      qsTr("Altitude AMSL")
-                labelText:  _activeVehicle && _activeVehicle.vehicle  && flightSettings.flightValuesAvailable.altitudeAMSLInfo
-                            ? _activeVehicle.vehicle.altitudeAMSL.value.toFixed(1) + " " + _activeVehicle.vehicle.altitudeAMSL.units
+                label:      qsTr("Ground Speed")
+                labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.groundSpeedInfo
+                            ? _activeVehicle.vehicle.groundSpeed.value.toFixed(2) + " " + _activeVehicle.vehicle.groundSpeed.units
                             : "N/A"
-                visible: _activeVehicle
+                visible:    _activeVehicle
                 //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
-                labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.altitudeAMSLInfo
-                                    ? (_activeVehicle.vehicle.altitudeRelative.value < 50)
-                                        ? "red" : "green"
-                                    : "red"
-                fontBoldLabelLabel: true
-                fontBoldLabel:      true
-                fontPointSize:      9
-            }
-
-            LabelledLabel {
-                label: qsTr("Throttle")
-                labelText:  _activeVehicle && _activeVehicle.vehicle  && flightSettings.flightValuesAvailable.throttlePctInfo
-                            ? _activeVehicle.vehicle.throttlePct.value.toFixed(1) + " " + _activeVehicle.vehicle.throttlePct.units
-                            : "N/A"
-                visible: _activeVehicle
-                //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
-                labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.throttlePctInfo
+                labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.groundSpeedInfo
                                     ? qgcPal.text
                                     : "red"
                 fontBoldLabelLabel: true
                 fontBoldLabel:      true
-                fontPointSize:      9
+                fontPointSize:      ScreenTools.defaultFontPointSize
+                // backgroundColor: "gray"
+                // backgroundOpacity: 0.3
+            }
+
+            LabelledLabel {
+                label:      qsTr("Wind Speed")
+                labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.windSpeedInfo
+                            ? _activeVehicle.wind.speed.value
+                            : "N/A"
+                visible:    _activeVehicle
+                //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
+                labelColor:         _activeVehicle && _activeVehicle.wind && flightSettings.flightValuesAvailable.windSpeedInfo
+                                    ? qgcPal.text
+                                    : "red"
+                fontBoldLabelLabel: true
+                fontBoldLabel:      true
+                fontPointSize:      ScreenTools.defaultFontPointSize
             }
 
             LabelledLabel {
@@ -190,67 +199,42 @@ ColumnLayout {
                                     : "red"
                 fontBoldLabelLabel: true
                 fontBoldLabel:      true
-                fontPointSize:      9
+                fontPointSize:      ScreenTools.defaultFontPointSize
             }
 
             LabelledLabel {
-                label:      qsTr("GPS Satellite Number")
-                labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.gpsSateliteNumberInfo
-                            ? _activeVehicle.gps.count.value
+                label:      qsTr("Altitude AMSL")
+                labelText:  _activeVehicle && _activeVehicle.vehicle  && flightSettings.flightValuesAvailable.altitudeAMSLInfo
+                            ? _activeVehicle.vehicle.altitudeAMSL.value.toFixed(1) + " " + _activeVehicle.vehicle.altitudeAMSL.units
                             : "N/A"
-                visible:    _activeVehicle
+                visible: _activeVehicle
                 //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
-                labelColor:         _activeVehicle && _activeVehicle.gps && flightSettings.flightValuesAvailable.gpsSateliteNumberInfo
+                labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.altitudeAMSLInfo
+                                    ? (_activeVehicle.vehicle.altitudeRelative.value < 50)
+                                        ? "red" : "green"
+                                    : "red"
+                fontBoldLabelLabel: true
+                fontBoldLabel:      true
+                fontPointSize:      ScreenTools.defaultFontPointSize
+                //backgroundColor: "darkgrey"
+                //backgroundOpacity: 0.3
+            }
+
+            LabelledLabel {
+                label: qsTr("Throttle")
+                labelText:  _activeVehicle && _activeVehicle.vehicle  && flightSettings.flightValuesAvailable.throttlePctInfo
+                            ? _activeVehicle.vehicle.throttlePct.value.toFixed(1) + " " + _activeVehicle.vehicle.throttlePct.units
+                            : "N/A"
+                visible: _activeVehicle
+                //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
+                labelColor:         _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.throttlePctInfo
                                     ? qgcPal.text
                                     : "red"
                 fontBoldLabelLabel: true
                 fontBoldLabel:      true
-                fontPointSize:      9
-            }
-
-            LabelledLabel {
-                label: qsTr("GPS Fix")
-                labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.gpsFixInfo
-                            ? _activeVehicle.gps.lock.enumStringValue
-                            : "N/A"
-                visible:    _activeVehicle
-                //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
-                labelColor:         _activeVehicle && _activeVehicle.gps && flightSettings.flightValuesAvailable.gpsFixInfo
-                                    ? qgcPal.text
-                                    : "red"
-                fontBoldLabelLabel: true
-                fontBoldLabel:      true
-                fontPointSize:      9
-            }
-
-            LabelledLabel {
-                label: qsTr("Wind Direction")
-                labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.windDirectionInfo
-                            ? _activeVehicle.wind.direction.value
-                            : "N/A"
-                visible:    _activeVehicle
-                //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
-                labelColor:         _activeVehicle && _activeVehicle.wind && flightSettings.flightValuesAvailable.windDirectionInfo
-                                    ? qgcPal.text
-                                    : "red"
-                fontBoldLabelLabel: true
-                fontBoldLabel:      true
-                fontPointSize:      9
-            }
-
-            LabelledLabel {
-                label:      qsTr("Wind Speed")
-                labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.windSpeedInfo
-                            ? _activeVehicle.wind.speed.value
-                            : "N/A"
-                visible:    _activeVehicle
-                //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
-                labelColor:         _activeVehicle && _activeVehicle.wind && flightSettings.flightValuesAvailable.windSpeedInfo
-                                    ? qgcPal.text
-                                    : "red"
-                fontBoldLabelLabel: true
-                fontBoldLabel:      true
-                fontPointSize:      9
+                fontPointSize:      ScreenTools.defaultFontPointSize
+                //backgroundColor: "lightgray"
+                //backgroundOpacity: 0.3
             }
 
             LabelledLabel {
@@ -265,7 +249,49 @@ ColumnLayout {
                                     : "red"
                 fontBoldLabelLabel: true
                 fontBoldLabel:      true
-                fontPointSize:      9
+                fontPointSize:      ScreenTools.defaultFontPointSize
+            }
+
+            LabelledLabel {
+                label:      qsTr("GPS Satellite Number")
+                labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.gpsSateliteNumberInfo
+                            ? _activeVehicle.gps.count.value
+                            : "N/A"
+                visible:    _activeVehicle
+                //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
+                labelColor:         _activeVehicle && _activeVehicle.gps && flightSettings.flightValuesAvailable.gpsSateliteNumberInfo
+                                    ? qgcPal.text
+                                    : "red"
+                fontBoldLabelLabel: true
+                fontBoldLabel:      true
+                fontPointSize:      ScreenTools.defaultFontPointSize
+            }
+
+            LabelledLabel {
+
+            }
+
+            LabelledLabel {
+
+            }
+
+            LabelledLabel {
+
+            }
+
+            LabelledLabel {
+                label: qsTr("GPS Fix")
+                labelText:  _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.gpsFixInfo
+                            ? _activeVehicle.gps.lock.enumStringValue
+                            : "N/A"
+                visible:    _activeVehicle
+                //fontSize:           ScreenTools.defaultFontPointSize * flightSettings.incrementFontIndex
+                labelColor:         _activeVehicle && _activeVehicle.gps && flightSettings.flightValuesAvailable.gpsFixInfo
+                                    ? qgcPal.text
+                                    : "red"
+                fontBoldLabelLabel: true
+                fontBoldLabel:      true
+                fontPointSize:      ScreenTools.defaultFontPointSize
             }
         }
     }
@@ -305,70 +331,6 @@ ColumnLayout {
                 columns: 3
 
                 LabelledLabel {
-                    label: qsTr("Charge State")
-                    labelText:      _activeVehicle && batteryValuesAvailable.chargeStateInfo
-                                    ? object.chargeState.enumStringValue
-                                    : "N/A"
-                    visible:        _activeVehicle
-                    //fontSize:       ScreenTools.defaultFontPointSize * incrementFontIndex
-                    labelColor:         _activeVehicle && batteryValuesAvailable.chargeStateInfo
-                                    ? qgcPal.text
-                                    : "red"
-                    fontBoldLabelLabel: true
-                    fontBoldLabel:      true
-                    fontPointSize:      9
-                }
-
-                LabelledLabel {
-                    label: qsTr("Remaining")
-                    labelText: _activeVehicle && batteryValuesAvailable.timeRemainingInfo
-                               ? object.timeRemainingStr.value
-                               : "N/A"
-                    visible:            _activeVehicle
-                    //fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
-                    labelColor:         _activeVehicle && batteryValuesAvailable.timeRemainingInfo
-                                       ? qgcPal.text
-                                       : "red"
-                    fontBoldLabelLabel: true
-                    fontBoldLabel:      true
-                    fontPointSize:      9
-                }
-
-                LabelledLabel {
-                    label:              qsTr("Remaining")
-                    labelText:          _activeVehicle && batteryValuesAvailable.percentRemainingInfo
-                                        ? object.percentRemaining.valueString + " " + object.percentRemaining.units
-                                        : "N/A"
-                    visible:            _activeVehicle
-                    //fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
-                    labelColor:         _activeVehicle && batteryValuesAvailable.percentRemainingInfo
-                                        ? qgcPal.text
-                                        : "red"
-                    fontBoldLabelLabel: true
-                    fontBoldLabel:      true
-                    fontPointSize:      9
-                }
-
-                LabelledLabel {
-                    label:              qsTr("Voltage")
-                    labelText:          _activeVehicle
-                                        ? object.voltage.value.toFixed(1) + " " + object.voltage.units
-                                        : "N/A"
-                    visible:            _activeVehicle
-                    //fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
-                    labelColor:         _activeVehicle
-                                        ? (object.voltage.value < 46)
-                                            ? "red"
-                                            : ((object.voltage.value < 47)
-                                            ? "#FF8C00" // Dark orange
-                                            : "green")
-                                        : "red"
-                    fontBoldLabelLabel: true
-                    fontBoldLabel:      true
-                    fontPointSize:      9
-                }
-
-                LabelledLabel {
                     label:              qsTr("Current")
                     labelText:          _activeVehicle && batteryValuesAvailable.currentInfo
                                         ? object.current.value.toFixed(1) + " " + object.current.units
@@ -380,7 +342,22 @@ ColumnLayout {
                                         : "red"
                     fontBoldLabelLabel: true
                     fontBoldLabel:      true
-                    fontPointSize:      9
+                    fontPointSize:      ScreenTools.defaultFontPointSize
+                }
+
+                LabelledLabel {
+                    label:          qsTr("Remaining")
+                    labelText: _activeVehicle && batteryValuesAvailable.timeRemainingInfo
+                               ? object.timeRemainingStr.value
+                               : "N/A"
+                    visible:            _activeVehicle
+                    //fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
+                    labelColor:         _activeVehicle && batteryValuesAvailable.timeRemainingInfo
+                                       ? qgcPal.text
+                                       : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                    fontPointSize:      ScreenTools.defaultFontPointSize
                 }
 
                 LabelledLabel {
@@ -400,7 +377,56 @@ ColumnLayout {
                                         : "red"
                     fontBoldLabelLabel: true
                     fontBoldLabel:      true
-                    fontPointSize:      9
+                    fontPointSize:      ScreenTools.defaultFontPointSize
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Voltage")
+                    labelText:          _activeVehicle
+                                        ? object.voltage.value.toFixed(1) + " " + object.voltage.units
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    //fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
+                    labelColor:         _activeVehicle
+                                        ? (object.voltage.value < 46)
+                                            ? "red"
+                                            : ((object.voltage.value < 47)
+                                            ? "#FF8C00" // Dark orange
+                                            : "green")
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                    fontPointSize:      ScreenTools.defaultFontPointSize
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Remaining")
+                    labelText:          _activeVehicle && batteryValuesAvailable.percentRemainingInfo
+                                        ? object.percentRemaining.valueString + " " + object.percentRemaining.units
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    //fontSize:           ScreenTools.defaultFontPointSize * incrementFontIndex
+                    labelColor:         _activeVehicle && batteryValuesAvailable.percentRemainingInfo
+                                        ? qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                    fontPointSize:      ScreenTools.defaultFontPointSize
+                }
+
+                LabelledLabel {
+                    label:              qsTr("Charge State")
+                    labelText:          _activeVehicle && batteryValuesAvailable.chargeStateInfo
+                                        ? object.chargeState.enumStringValue
+                                        : "N/A"
+                    visible:            _activeVehicle
+                    //fontSize:         ScreenTools.defaultFontPointSize * incrementFontIndex
+                    labelColor:         _activeVehicle && batteryValuesAvailable.chargeStateInfo
+                                        ? qgcPal.text
+                                        : "red"
+                    fontBoldLabelLabel: true
+                    fontBoldLabel:      true
+                    fontPointSize:      ScreenTools.defaultFontPointSize
                 }
             }
         }

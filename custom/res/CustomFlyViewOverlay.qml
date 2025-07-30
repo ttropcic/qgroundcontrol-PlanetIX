@@ -74,20 +74,20 @@ Item {
     // - we use parent bottomEdgeLeftInset to dodge the virtual joystick if enabled
     // - we use the parent leftEdgeTopInset to size our element to the same width as the ToolStripAction
     // - we export the width of this element as the leftEdgeCenterInset so that the map will recenter if the vehicle flys behind this element
-    Rectangle {
-        id: exampleRectangle
-        visible: false // to see this example, set this to true. To view insets, enable the insets viewer FlyView.qml
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.topMargin: parentToolInsets.topEdgeLeftInset + _toolsMargin
-        anchors.bottomMargin: parentToolInsets.bottomEdgeLeftInset + _toolsMargin
-        anchors.leftMargin: _toolsMargin
-        width: parentToolInsets.leftEdgeTopInset - _toolsMargin
-        color: 'red'
+    // Rectangle {
+    //     id: exampleRectangle
+    //     visible: false // to see this example, set this to true. To view insets, enable the insets viewer FlyView.qml
+    //     anchors.left: parent.left
+    //     anchors.top: parent.top
+    //     anchors.bottom: parent.bottom
+    //     anchors.topMargin: parentToolInsets.topEdgeLeftInset + _toolsMargin
+    //     anchors.bottomMargin: parentToolInsets.bottomEdgeLeftInset + _toolsMargin
+    //     anchors.leftMargin: _toolsMargin
+    //     width: parentToolInsets.leftEdgeTopInset - _toolsMargin
+    //     color: 'red'
 
-        property real leftEdgeCenterInset: visible ? x + width : 0
-    }
+    //     property real leftEdgeCenterInset: visible ? x + width : 0
+    // }
 
     Rectangle {
         id:                     compassBackground
@@ -197,7 +197,7 @@ Item {
     // Flight information grid
     FlyViewBottomRightRowLayout {
         id:                 bottomRightRowLayout
-        width:              700
+        Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 135
         anchors.right:      compassBackground.left
         anchors.bottom:     parent.bottom
     }
