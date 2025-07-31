@@ -14,57 +14,29 @@ import QGroundControl.Controls
 import QGroundControl.ScreenTools
 
 RowLayout {
-    id: r1
+    spacing:                                ScreenTools.defaultFontPixelWidth * 2
+
     property alias label:                  _labelLabel.text
     property alias labelText:              _label.text
-    property real  labelPreferredWidth:    -1
-
     property alias labelColor:              _label.color
-    property real fontSize:                 ScreenTools.defaultFontPointSize
     property bool fontBoldLabelLabel:       false
     property bool fontBoldLabel:            false
     property int  fontPointSize:            0
-    // property color backgroundColor:         "transparent"
-    // property real backgroundOpacity:                   1
-    property int fixedLabelWidth: ScreenTools.defaultFontPixelWidth * 20
-    property int fixedValueWidth: ScreenTools.defaultFontPixelWidth * 12
-
-    spacing: ScreenTools.defaultFontPixelWidth * 2
+    property int fixedLabelWidth:           ScreenTools.defaultFontPixelWidth * 20
+    property int fixedValueWidth:           ScreenTools.defaultFontPixelWidth * 12
 
     QGCLabel {
-        id:                 _labelLabel
-        //Layout.fillWidth:   true
-        Layout.preferredWidth: fixedLabelWidth
-        fontSizeQGCLabel:   fontSize
-        fontBoldQGCLabel:   fontBoldLabelLabel
-        font.pointSize:     fontPointSize
-
-        // Rectangle {
-        //     id: _labelLabelBackground
-        //     z: -1
-        //     width: r1.width
-        //     height: _labelLabel.height
-        //     color: backgroundColor
-        //     opacity: backgroundOpacity
-        // }
+        id:                     _labelLabel
+        Layout.preferredWidth:  fixedLabelWidth
+        fontBoldQGCLabel:       fontBoldLabelLabel
+        font.pointSize:         fontPointSize
     }
 
     QGCLabel {
         id:                     _label
-        //Layout.preferredWidth:  labelPreferredWidth
-        Layout.preferredWidth: fixedValueWidth
-        fontSizeQGCLabel:       fontSize
+        Layout.preferredWidth:  fixedValueWidth
         fontBoldQGCLabel:       fontBoldLabel
         font.pointSize:         fontPointSize
-
-        // Rectangle {
-        //     id: _labelBackground
-        //     z: -1
-        //     width: _label.width
-        //     height: _label.height
-        //     color: backgroundColor
-        //     opacity: backgroundOpacity
-        // }
     }
 }
 
