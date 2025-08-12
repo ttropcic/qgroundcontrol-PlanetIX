@@ -97,7 +97,7 @@ ColumnLayout {
             LabelledLabel {
                 label:              qsTr("Wind Direction")
                 labelText:          _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.windDirectionInfo
-                                        ? _activeVehicle.wind.direction.value
+                                        ? _activeVehicle.wind.direction.value.toFixed(2)
                                         : "N/A"
                 labelColor:         _activeVehicle && _activeVehicle.wind && flightSettings.flightValuesAvailable.windDirectionInfo
                                         ? qgcPal.text
@@ -151,7 +151,7 @@ ColumnLayout {
             LabelledLabel {
                 label:              qsTr("Wind Speed")
                 labelText:          _activeVehicle && _activeVehicle.vehicle && flightSettings.flightValuesAvailable.windSpeedInfo
-                                        ? _activeVehicle.wind.speed.value
+                                        ? _activeVehicle.wind.speed.value.toFixed(2)
                                         : "N/A"
                 labelColor:         _activeVehicle && _activeVehicle.wind && flightSettings.flightValuesAvailable.windSpeedInfo
                                         ? qgcPal.text
