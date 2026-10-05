@@ -3,8 +3,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
 include(FetchContent)
 FetchContent_Declare(libevents
     GIT_REPOSITORY https://github.com/mavlink/libevents.git
-    GIT_TAG main
-    GIT_SHALLOW TRUE
+    GIT_TAG eab8144cabb96bff03c54af4037c00ed1d90a00f
     SOURCE_SUBDIR libs/cpp
 )
 FetchContent_MakeAvailable(libevents)
