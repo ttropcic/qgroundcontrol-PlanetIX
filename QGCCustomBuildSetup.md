@@ -8,6 +8,14 @@ The following versions/settings are used to build the custom QGroundControl Wind
 2. **Qt Creator:** v13.0.2
 3. **GStreamer:** v1.28.7 — MSVC x86_64
 
+## Build and version settings for Linux
+
+The Linux build uses the same repository, source-code changes, and general development tools. The main difference is the Qt kit/compiler used for the build:
+
+1. **Qt:** v6.6.3 — GCC 64bit
+2. **Qt Creator:** v13.0.2
+3. **GStreamer:** 1.28.7
+
 ## Repository
 
 Clone the custom QGroundControl repository and the required submodules:
