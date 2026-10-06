@@ -32,7 +32,8 @@
         <file alias="QGroundControl/FlightDisplay/FlyViewCustomLayer.qml">res/CustomFlyViewOverlay.qml</file>
         <file alias="QGroundControl/FlightDisplay/FlyViewWidgetLayer.qml">res/CustomFlyViewWidgetLayer.qml</file>
         <file alias="QGroundControl/FlightDisplay/FlyViewTopRightColumnLayout.qml">res/CustomFlyViewTopRightColumnLayout.qml</file>
-	<file alias="QGroundControl/FlightDisplay/FlyViewBottomRightRowLayout.qml">res/CustomFlyViewBottomRightRowLayout.qml</file>
+	    <file alias="QGroundControl/FlightDisplay/FlyViewBottomRightRowLayout.qml">res/CustomFlyViewBottomRightRowLayout.qml</file>
+        <file alias="SafetyComponent.qml">res/CustomSafetyComponent.qml</file>
     </qresource>
     <qresource prefix="/res">
         <file alias="QGCLogoFull">res/QGCLogoFull.svg</file>
