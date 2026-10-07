@@ -34,6 +34,8 @@
         <file alias="QGroundControl/FlightDisplay/FlyViewTopRightColumnLayout.qml">res/CustomFlyViewTopRightColumnLayout.qml</file>
 	    <file alias="QGroundControl/FlightDisplay/FlyViewBottomRightRowLayout.qml">res/CustomFlyViewBottomRightRowLayout.qml</file>
         <file alias="SafetyComponent.qml">res/CustomSafetyComponent.qml</file>
+        <file alias="SensorsSetup.qml">res/CustomSensorsSetup.qml</file>
+        <file alias="APMSensorsComponent.qml">res/CustomAPMSensorsComponent.qml</file>
     </qresource>
     <qresource prefix="/res">
         <file alias="QGCLogoFull">res/QGCLogoFull.svg</file>

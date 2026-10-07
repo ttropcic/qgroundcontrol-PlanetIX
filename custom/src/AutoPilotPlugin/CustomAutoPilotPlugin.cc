@@ -42,9 +42,10 @@ const QVariantList& CustomAutoPilotPlugin::vehicleComponents()
                     _airframeComponent->setupTriggerSignals();
                     _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_airframeComponent)));
 
-                    _sensorsComponent = new SensorsComponent(_vehicle, this);
-                    _sensorsComponent->setupTriggerSignals();
-                    _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_sensorsComponent)));
+                    // [TIN] Sensors used to be only here, but they are moved as we need them outside of Advanced mode
+                    // _sensorsComponent = new SensorsComponent(_vehicle, this);
+                    // _sensorsComponent->setupTriggerSignals();
+                    // _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_sensorsComponent)));
 
                     _radioComponent = new PX4RadioComponent(_vehicle, this);
                     _radioComponent->setupTriggerSignals();
@@ -66,6 +67,10 @@ const QVariantList& CustomAutoPilotPlugin::vehicleComponents()
                 _safetyComponent = new SafetyComponent(_vehicle, this);
                 _safetyComponent->setupTriggerSignals();
                 _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_safetyComponent)));
+
+                _sensorsComponent = new SensorsComponent(_vehicle, this);
+                _sensorsComponent->setupTriggerSignals();
+                _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_sensorsComponent)));
 
                 if (showAdvanced) {
                     _tuningComponent = new PX4TuningComponent(_vehicle, this);
