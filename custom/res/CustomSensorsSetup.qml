@@ -31,9 +31,6 @@ Item {
     property bool   showSensorCalibrationLevel:     true    ///< true: Show this calibration button
     property bool   showSensorCalibrationAirspeed:  true    ///< true: Show this calibration button
     property bool   showSetOrientations:            true    ///< true: Show this calibration button
-    property bool   showNextButton:                 true   ///< true: Show Next button which will signal nextButtonClicked
-
-    signal nextButtonClicked
 
     // Help text which is shown both in the status text area prior to pressing a cal button and in the
     // pre-calibration dialog.
@@ -390,20 +387,6 @@ Item {
             spacing:    ScreenTools.defaultFontPixelHeight / 2
 
             IndicatorButton {
-                id:             compassButton
-                width:          _buttonWidth
-                text:           qsTr("Compass")
-                indicatorGreen: cal_mag0_id.value !== 0
-                visible:        !_allMagsDisabled && QGroundControl.corePlugin.options.showSensorCalibrationCompass && showSensorCalibrationCompass
-
-                onClicked: {
-                    preCalibrationDialogType = "compass"
-                    preCalibrationDialogHelp = compassHelp
-                    preCalibrationDialogComponent.createObject(mainWindow, { title: qsTr("Calibrate Compass") }).open()
-                }
-            }
-
-            IndicatorButton {
                 id:             gyroButton
                 width:          _buttonWidth
                 text:           qsTr("Gyroscope")
@@ -437,7 +420,7 @@ Item {
                 text:           qsTr("Level Horizon")
                 indicatorGreen: true
                 enabled:        cal_acc0_id.value !== 0 && cal_gyro0_id.value !== 0
-                visible:        QGroundControl.corePlugin.options.showSensorCalibrationLevel && showSensorCalibrationLevel
+                visible:        false
 
                 onClicked: {
                     preCalibrationDialogType = "level"
@@ -462,6 +445,20 @@ Item {
                 }
             }
 
+            IndicatorButton {
+                id:             compassButton
+                width:          _buttonWidth
+                text:           qsTr("Compass")
+                indicatorGreen: cal_mag0_id.value !== 0
+                visible:        !_allMagsDisabled && QGroundControl.corePlugin.options.showSensorCalibrationCompass && showSensorCalibrationCompass
+
+                onClicked: {
+                    preCalibrationDialogType = "compass"
+                    preCalibrationDialogHelp = compassHelp
+                    preCalibrationDialogComponent.createObject(mainWindow, { title: qsTr("Calibrate Compass") }).open()
+                }
+            }
+
             QGCButton {
                 id:         cancelButton
                 width:      _buttonWidth
@@ -470,20 +467,11 @@ Item {
                 onClicked:  controller.cancelCalibration()
             }
 
-
-            QGCButton {
-                id:         nextButton
-                width:      _buttonWidth
-                text:       qsTr("Next")
-                visible:    showNextButton
-                onClicked:  _root.nextButtonClicked()
-            }
-
             QGCButton {
                 id:         setOrientationsButton
                 width:      _buttonWidth
                 text:       qsTr("Orientations")
-                visible:    orientationsButtonVisible()
+                visible:    false
 
                 onClicked:  {
                     setOrientationsDialogShowBoardOrientation = true
@@ -606,21 +594,6 @@ Item {
                         calInProgressText:  controller.orientationCalRightSideRotate ? qsTr("Rotate") : qsTr("Hold Still")
                         imageSource:        controller.orientationCalRightSideRotate ? "qrc:///qmlimages/VehicleRightRotate.png" : "qrc:///qmlimages/VehicleRight.png"
                     }
-                }
-            }
-
-            QGCButton {
-                text:  qsTr("Factory reset")
-                width: _buttonWidth
-
-                anchors {
-                    right:       orientationCalArea.left
-                    rightMargin: ScreenTools.defaultFontPixelWidth/2
-                    bottom:      orientationCalArea.bottom
-                }
-
-                onClicked: {
-                    controller.resetFactoryParameters()
                 }
             }
         }
