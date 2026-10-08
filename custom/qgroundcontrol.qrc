@@ -50,6 +50,7 @@
 		<file alias="HelpSettings.qml">../src/UI/preferences/HelpSettings.qml</file>
 		<file alias="IntegratedAttitudeIndicator.qml">../src/FlightMap/Widgets/IntegratedAttitudeIndicator.qml</file>
 		<file alias="IntegratedCompassAttitude.qml">../src/FlightMap/Widgets/IntegratedCompassAttitude.qml</file>
+		<file alias="CustomRebootVehicle.qml">../custom/res/CustomRebootVehicle.qml</file>
 		<file alias="JoystickConfig.qml">../src/VehicleSetup/JoystickConfig.qml</file>
 		<file alias="JoystickConfigAdvanced.qml">../src/VehicleSetup/JoystickConfigAdvanced.qml</file>
 		<file alias="JoystickConfigButtons.qml">../src/VehicleSetup/JoystickConfigButtons.qml</file>
@@ -290,7 +291,6 @@
 		<file alias="RadioComponent.qml">../src/AutoPilotPlugins/Common/RadioComponent.qml</file>
 		<file alias="SerialSettings.qml">../src/UI/preferences/SerialSettings.qml</file>
 		<file alias="SetupParameterEditor.qml">../src/VehicleSetup/SetupParameterEditor.qml</file>
-		<file alias="SetupView.qml">../src/VehicleSetup/SetupView.qml</file>
 		<file alias="SettingsPage.qml">../src/UI/preferences/SettingsPage.qml</file>
 		<file alias="SettingsPagesModel.qml">../src/UI/SettingsPagesModel.qml</file>
 		<file alias="SimpleItemEditor.qml">../src/PlanView/SimpleItemEditor.qml</file>

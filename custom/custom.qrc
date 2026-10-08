@@ -16,6 +16,8 @@
     </qresource>
     <qresource prefix="/qmlimages">
         <file alias="PaperPlane.svg">res/Images/CustomVehicleIcon.svg</file>
+        <file alias="reboot_light.svg">res/Images/reboot_light.svg</file>
+        <file alias="reboot.svg">res/Images/reboot.svg</file>
     </qresource>
     <qresource prefix="/Custom/Widgets">
         <file alias="Custom/Widgets/CustomArtificialHorizon.qml">res/Custom/Widgets/CustomArtificialHorizon.qml</file>
@@ -35,6 +37,7 @@
 	    <file alias="QGroundControl/FlightDisplay/FlyViewBottomRightRowLayout.qml">res/CustomFlyViewBottomRightRowLayout.qml</file>
         <file alias="SafetyComponent.qml">res/CustomSafetyComponent.qml</file>
         <file alias="SensorsSetup.qml">res/CustomSensorsSetup.qml</file>
+        <file alias="SetupView.qml">res/CustomSetupView.qml</file>
     </qresource>
     <qresource prefix="/res">
         <file alias="QGCLogoFull">res/QGCLogoFull.svg</file>
