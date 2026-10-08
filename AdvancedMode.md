@@ -24,3 +24,7 @@ To leave Advanced Mode:
 QGroundControl will return to **Regular Mode**.
 
 > **Note:** This procedure is specific to this custom QGroundControl build. The standard QGC documentation may describe a different way of accessing Advanced Mode.
+
+## Source code
+
+The quickest way of finding this mechanic in the code is by searching for this string `easterEggMouseArea`
