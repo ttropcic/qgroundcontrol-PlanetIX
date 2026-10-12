@@ -71,9 +71,9 @@ Item {
         id:                     compassBackground
         anchors.bottom:         attitudeIndicator.bottom
         anchors.right:          attitudeIndicator.left
-        anchors.rightMargin:    -attitudeIndicator.width / 2
+        anchors.rightMargin:    -attitudeIndicator.width
         width:                  -anchors.rightMargin + compassBezel.width + (_toolsMargin * 2)
-        height:                 attitudeIndicator.height * 0.75 + 25
+        height:                 attitudeIndicator.height * 1.00
         radius:                 2
         color:                  qgcPal.window
 
@@ -166,7 +166,23 @@ Item {
     FlyViewBottomRightRowLayout {
         id:                 bottomRightRowLayout
         Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 135
+
+        height:             compassBackground.height
+
         anchors.right:      compassBackground.left
         anchors.bottom:     parent.bottom
+    }
+    
+    // Battery information grid
+    Loader {
+        id: batteryLayoutLoader
+
+        source: "qrc:/qml/CustomBatteryLayout.qml"
+
+        width: compassBackground.width
+
+        anchors.bottom: compassBackground.top
+        anchors.right:  parent.right
+        anchors.left:   compassBackground.left
     }
 }
